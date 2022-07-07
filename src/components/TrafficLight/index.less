@@ -1,0 +1,31 @@
+.traffic-light {
+  width: 120px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+
+  .traffic-light-item {
+    width: 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+    display: flex;
+  }
+
+  .traffic-light-item:nth-child(1):hover {
+    opacity: 0.8;
+  }
+  .traffic-light-item:nth-child(2):hover {
+    opacity: 0.8;
+  }
+  .traffic-light-item:last-child:hover {
+    background: red;
+  }
+}
