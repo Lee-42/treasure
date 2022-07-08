@@ -1,22 +1,50 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Mine</router-link> |
-    <router-link to="/discover">Discover</router-link>
+  <div class="content">
+    <Header></Header>
+    <div class="body">
+      <SideBar></SideBar>
+      <router-view class="view" />
+    </div>
   </div>
-  <TrafficLight />
-  <router-view />
+  <!-- <TrafficLight /> -->
 </template>
 
 
 <script>
-import TrafficLight from "./components/TrafficLight/index.jsx";
+// import TrafficLight from "./components/TrafficLight/index.jsx";
+import Header from "./components/Header";
+import SideBar from "./components/SideBar";
 export default {
   components: {
-    TrafficLight,
+    // TrafficLight,
+    Header,
+    SideBar,
   },
   setup() {},
 };
 </script>
 
 
-<style lang="less" scoped></style>
+<style lang="less">
+#app {
+  width: 100%;
+  height: 100vh;
+}
+</style>
+
+<style lang="less">
+.content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .body {
+    flex: 1;
+    display: flex;
+
+    .view {
+      flex: 1;
+    }
+  }
+}
+</style>

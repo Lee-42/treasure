@@ -16,6 +16,7 @@ export function useTrafficLight() {
       window.restore();
       window.webContents.send("restore");
     });
+    ipcMain.on("close", (e, args) => {});
     window.on("restore", () => {
       window.webContents.send("restore");
     });
