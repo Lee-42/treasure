@@ -18,7 +18,6 @@
 import ForwardBackward from "../ForwardBackward";
 import Search from "../Search";
 import ToolBar from "../ToolBar";
-import { ref } from "vue";
 
 export default {
   name: "header",
@@ -29,11 +28,7 @@ export default {
     ToolBar,
   },
   setup() {
-    const loadingText = ref("什么东西");
-
-    return {
-      loadingText,
-    };
+    return {};
   },
 };
 </script>
@@ -55,7 +50,7 @@ export default {
 
   .search-wrapper {
     position: absolute;
-    left: 200px;
+    right: 150px;
   }
 
   .tool-wrapper {

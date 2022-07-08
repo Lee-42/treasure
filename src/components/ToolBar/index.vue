@@ -1,6 +1,6 @@
 <template>
   <div class="toolbar">
-    <i class="icon-setting" v-tippy="{ content: 'Hi!' }"></i>
+    <i class="icon-setting"></i>
     <i class="icon-xinfeng"></i>
     <i class="icon-mask"></i>
     <i class="icon-smallscreen"></i>

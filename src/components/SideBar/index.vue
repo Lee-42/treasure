@@ -1,13 +1,20 @@
 
 <template>
   <div class="sidebar">
-    <router-link to="/">Mine</router-link> |
-    <router-link to="/discover">Discover</router-link>
+    <div class="avatar-wrapper">
+      <Avatar />
+    </div>
+    <div class="navigator-wrapper">
+      <Navigator />
+    </div>
   </div>
 </template>
 
 <script>
+import Avatar from "../Avatar";
+import Navigator from "../Navigator";
 export default {
+  components: { Avatar, Navigator },
   setup() {},
 };
 </script>
@@ -17,5 +24,13 @@ export default {
   width: 200px;
   height: 100%;
   background: #333333;
+  display: flex;
+  flex-direction: column;
+
+  .avatar-wrapper {
+  }
+  .navigator-wrapper {
+    flex: 1;
+  }
 }
 </style>

@@ -1,126 +1,75 @@
 <template>
-  <div class="certain-category-search-wrapper" style="width: 250px">
-    <a-auto-complete
-      v-model:value="value"
-      class="certain-category-search"
-      dropdown-class-name="certain-category-search-dropdown"
-      :dropdown-match-select-width="500"
-      style="width: 250px"
-      :options="dataSource"
-    >
-      <template #option="item">
-        <template v-if="item.options">
-          <span>
-            {{ item.value }}
-            <a
-              style="float: right"
-              href="https://www.google.com/search?q=antd"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              more
-            </a>
-          </span>
-        </template>
-        <template v-else-if="item.value === 'all'">
-          <a
-            href="https://www.google.com/search?q=ant-design-vue"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View all results
-          </a>
-        </template>
-        <template v-else>
-          <div style="display: flex; justify-content: space-between">
-            {{ item.value }}
-            <span>
-              <UserOutlined />
-              {{ item.count }}
-            </span>
-          </div>
-        </template>
+  <div class="search">
+    <a-input v-model:value="userName" placeholder="搜索">
+      <template #prefix>
+        <!-- <user-outlined type="user" /> -->
+        <i class="icon-search"></i>
       </template>
-      <a-input-search placeholder="input here" size="large"></a-input-search>
-    </a-auto-complete>
+      <template #suffix>
+        <a-tooltip title="Extra information">
+          <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
+        </a-tooltip>
+      </template>
+    </a-input>
   </div>
 </template>
 <script>
-import { defineComponent, ref } from "vue";
-import { UserOutlined } from "@ant-design/icons-vue";
-const dataSource = [
-  {
-    value: "Libraries",
-    options: [
-      {
-        value: "AntDesignVue",
-        count: 10000,
-      },
-      {
-        value: "AntDesignVue UI",
-        count: 10600,
-      },
-    ],
-  },
-  {
-    value: "Solutions",
-    options: [
-      {
-        value: "AntDesignVue UI FAQ",
-        count: 60100,
-      },
-      {
-        value: "AntDesignVue FAQ",
-        count: 30010,
-      },
-    ],
-  },
-  {
-    value: "Articles",
-    options: [
-      {
-        value: "AntDesignVue design language",
-        count: 100000,
-      },
-    ],
-  },
-  {
-    value: "all",
-  },
-];
-export default defineComponent({
-  components: {
-    UserOutlined,
-  },
+import { defineComponent, ref, watch } from "vue";
 
+const mockVal = (str, repeat = 1) => {
+  return {
+    value: str.repeat(repeat),
+  };
+};
+
+export default defineComponent({
   setup() {
+    const value = ref("");
+    const options = ref([]);
+
+    const onSearch = (searchText) => {
+      console.log("searchText");
+      options.value = !searchText
+        ? []
+        : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)];
+    };
+
+    const onSelect = (value) => {
+      console.log("onSelect", value);
+    };
+
+    watch(value, () => {
+      console.log("value", value.value);
+    });
     return {
-      value: ref(""),
-      dataSource,
+      value,
+      options,
+      onSearch,
+      onSelect,
     };
   },
 });
 </script>
-<style>
-.certain-category-search-dropdown .ant-select-dropdown-menu-item-group-title {
-  color: #666;
-  font-weight: bold;
-}
 
-.certain-category-search-dropdown .ant-select-dropdown-menu-item-group {
-  border-bottom: 1px solid #f6f6f6;
-}
+<style lang="less" scoped>
+.search {
+  height: 26px;
 
-.certain-category-search-dropdown .ant-select-dropdown-menu-item {
-  padding-left: 16px;
-}
-
-.certain-category-search-dropdown .ant-select-dropdown-menu-item.show-all {
-  text-align: center;
-  cursor: default;
-}
-
-.certain-category-search-dropdown .ant-select-dropdown-menu {
-  max-height: 300px;
+  .ant-input-affix-wrapper {
+    height: 100%;
+    border-radius: 13px;
+    padding: 4px 10px 4px 4px;
+    background: rgb(57, 57, 57);
+    border: none;
+    .ant-input-prefix {
+      i {
+        font-size: 16px;
+        color: white;
+      }
+    }
+    .ant-input {
+      background: rgb(57, 57, 57);
+    }
+  }
 }
 </style>
