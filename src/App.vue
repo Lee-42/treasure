@@ -9,7 +9,7 @@
 
 
 <script>
-import { TrafficLight } from "./components/TrafficLight";
+import TrafficLight from "./components/TrafficLight/index.jsx";
 export default {
   components: {
     TrafficLight,

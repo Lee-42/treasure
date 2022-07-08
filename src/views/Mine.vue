@@ -1,7 +1,7 @@
 <template>
   <div class="mine">
-    <div class="block"></div>
-    <a-button type="primary">按钮</a-button>
+    <!-- <div class="block"></div> -->
+    <!-- <a-button type="primary">按钮</a-button> -->
   </div>
 </template>
 
