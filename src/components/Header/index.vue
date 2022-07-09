@@ -39,9 +39,14 @@ export default {
   height: 50px;
   background: rgb(34, 34, 34);
   -webkit-app-region: drag;
-  position: relative;
+  position: fixed;
   display: flex;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
   align-items: center;
+  z-index: 10;
 
   .forward-backward-wrapper {
     position: absolute;

@@ -1,6 +1,16 @@
 <template>
   <div class="mine">
     <div class="hover"></div>
+    <div class="hover"></div>
+    <div class="hover"></div>
+    <div class="hover"></div>
+    <div class="hover"></div>
+    <div class="hover"></div>
+    <div class="hover"></div>
+    <div class="hover"></div>
+    <div class="hover"></div>
+    <div class="hover"></div>
+    <div class="hover"></div>
   </div>
 </template>
 
@@ -21,6 +31,7 @@ export default {
 <style lang="less" scoped>
 @import "../assets/less/variable.less";
 .mine {
+  overflow-y: auto;
   .hover {
     width: 100px;
     height: 100px;
