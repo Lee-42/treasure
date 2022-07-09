@@ -48,10 +48,6 @@ export default {
     .view {
       flex: 1;
       overflow-y: auto;
-
-      div {
-        height: 100px;
-      }
     }
   }
 }

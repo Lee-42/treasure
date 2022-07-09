@@ -1,14 +1,27 @@
 <template>
-  <div class="local-music"></div>
+  <div class="local-music">
+    <PlayListBtn
+      @play="handlePlay"
+      @add-to-list="handleAddToList"
+    ></PlayListBtn>
+  </div>
 </template>
 <script>
-import { defineComponent } from "vue";
+import PlayListBtn from "../components/Base/PlayListBtn";
 
-export default defineComponent({
-  components: {},
-
+export default {
+  components: { PlayListBtn },
   setup() {
-    return {};
+    const handlePlay = () => {
+      console.log("handlePlay");
+    };
+    const handleAddToList = () => {
+      console.log("handleAddToList");
+    };
+    return {
+      handlePlay,
+      handleAddToList,
+    };
   },
-});
+};
 </script>
