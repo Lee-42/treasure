@@ -1,11 +1,17 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Mine from "../views/Mine.vue";
+import LocalMusic from "../views/LocalMusic.vue";
 
 const routes = [
   {
     path: "/",
-    name: "Mine",
-    component: Mine,
+    name: "LocalMusic",
+    component: LocalMusic,
+  },
+  {
+    path: "/recentlyPlayed",
+    name: "RecentlyPlayed",
+    component: () =>
+      import(/* webpackChunkName: "discover" */ "../views/RecentlyPlayed.vue"),
   },
   {
     path: "/discover",

@@ -13,9 +13,12 @@
 <script>
 import Avatar from "../Avatar";
 import Navigator from "../Navigator";
+
 export default {
   components: { Avatar, Navigator },
-  setup() {},
+  setup() {
+    return {};
+  },
 };
 </script>
 
@@ -26,6 +29,7 @@ export default {
   background: #333333;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 
   .avatar-wrapper {
   }
