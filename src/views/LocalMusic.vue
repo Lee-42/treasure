@@ -6,6 +6,9 @@
       size="small"
       :pagination="false"
       sticky
+      :row-class-name="
+        (_record, index) => (index % 2 === 1 ? 'odd-line' : null)
+      "
     >
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
@@ -25,59 +28,66 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import PlayListBtn from "../components/Base/PlayListBtn";
 import { showOpenDialog, isAudio } from "../utils";
+import fs from "fs-extra";
+import path from "path";
 
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
-  },
-  {
-    title: "Cash Assets",
-    dataIndex: "money",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    width: 100,
+    title: "歌名",
+    dataIndex: "song_name",
     ellipsis: true,
+    resizable: true,
+    width: 150,
   },
+  // {
+  //   title: "路径",
+  //   dataIndex: "song_path",
+  //   ellipsis: true,
+  //   resizable: true,
+  //   width: 100,
+  //   minWidth: 100,
+  //   maxWidth: 200,
+  // },
 ];
-const data = () => {
-  let arr = [];
-  for (let i = 0; i < 100; i++) {
-    arr.push({
-      key: i,
-      name: "John Brown",
-      money: "￥300,000.00",
-      address: "New York No. 1 Lake Park",
-    });
-  }
-  return arr;
-};
 export default defineComponent({
   components: {
     PlayListBtn,
   },
   setup() {
+    let data = ref([]);
+    onMounted(() => {
+      addLocalMusic("/Volumes/T7/Music");
+    });
     /**
      * 添加本地音乐
      */
-    const addLocalMusic = () => {
-      showOpenDialog({
-        title: "添加本地音乐",
-        properties: ["openDirectory"],
-      }).then((res) => {
-        console.log("res: ", res);
-        if (!res.canceled && res.filePaths.length > 0) {
-          console.log();
-        }
-      });
+    const addLocalMusic = async (filePath) => {
+      if (!filePath) {
+        showOpenDialog({
+          title: "添加本地音乐",
+          properties: ["openDirectory"],
+        }).then(async (res) => {
+          if (!res.canceled && res.filePaths.length > 0) {
+            let filePath = res.filePaths[0];
+          }
+        });
+      } else {
+        let files = await fs.readdirSync(filePath);
+        files.map((f) => {
+          if (isAudio(f)) {
+            data.value.push({
+              song_name: f,
+              // song_path: path.join(filePath, f),
+            });
+          }
+        });
+      }
     };
     return {
-      data: data(),
+      data,
       columns,
       addLocalMusic,
     };
@@ -87,10 +97,15 @@ export default defineComponent({
 <style lang="less" scoped>
 .local-music {
   .ant-table-wrapper {
+    background: rgb(28, 28, 28);
     /deep/ .ant-table {
-      background: #333333;
+      color: white;
+      background: rgb(28, 28, 28);
 
       .ant-table-title {
+        background: rgb(28, 28, 28);
+        border-bottom: 1px solid white;
+
         .list-header {
           display: flex;
           align-items: center;
@@ -98,8 +113,39 @@ export default defineComponent({
       }
 
       .ant-table-container {
-        /deep/ .ant-table-header {
-          background: #444444;
+        background: rgb(28, 28, 28);
+
+        .ant-table-header {
+          table {
+            thead > tr > th {
+              background: rgb(28, 28, 28);
+              color: white;
+            }
+          }
+        }
+        .ant-table-body {
+          tbody {
+            tr:first-child {
+              display: none;
+            }
+            tr {
+              td {
+                padding: 7px 8px;
+                color: rgb(164, 164, 164);
+                font-size: 13px;
+                border-bottom: none;
+                background: rgb(28, 28, 28);
+              }
+              td:hover {
+                background: rgb(37, 37, 37);
+              }
+            }
+            .odd-line {
+              td {
+                background: rgb(32, 31, 32);
+              }
+            }
+          }
         }
       }
     }

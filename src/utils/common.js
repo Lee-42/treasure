@@ -39,8 +39,12 @@ function showOpenDialog(args) {
  * @returns
  */
 function getFileSuffix(fileName) {
-  return fileName && fileName.match(/^(.*)(\.)(.{1,8})$/)[3];
+  if (fileName && fileName.match(/^(.*)(\.)(.{1,8})$/)) {
+    return fileName.match(/^(.*)(\.)(.{1,8})$/)[3];
+  }
 }
+
+console.log(getFileSuffix(".localized"));
 
 /**
  * 判断一个文件是否是音频文件
@@ -48,7 +52,11 @@ function getFileSuffix(fileName) {
  * @returns
  */
 function isAudio(fileName) {
-  return audio_type.includes(getFileSuffix(fileName));
+  if (fileName.startsWith("._")) {
+    return false;
+  } else {
+    return audio_type.includes(getFileSuffix(fileName));
+  }
 }
 
 export { showOpenDialog, isAudio };
