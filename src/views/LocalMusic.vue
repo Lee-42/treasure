@@ -3,7 +3,6 @@
     <a-table
       :columns="columns"
       :data-source="data"
-      bordered
       size="small"
       :pagination="false"
       sticky
@@ -13,13 +12,23 @@
           <a>{{ text }}</a>
         </template>
       </template>
-      <template #title>Header</template>
+      <template #title>
+        <div class="list-header">
+          <PlayListBtn></PlayListBtn>
+          <a-button type="primary" size="small" @click="addLocalMusic"
+            >添加</a-button
+          >
+        </div>
+      </template>
     </a-table>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import PlayListBtn from "../components/Base/PlayListBtn";
+import { showOpenDialog, isAudio } from "../utils";
+
 const columns = [
   {
     title: "Name",
@@ -49,17 +58,51 @@ const data = () => {
   return arr;
 };
 export default defineComponent({
+  components: {
+    PlayListBtn,
+  },
   setup() {
+    /**
+     * 添加本地音乐
+     */
+    const addLocalMusic = () => {
+      showOpenDialog({
+        title: "添加本地音乐",
+        properties: ["openDirectory"],
+      }).then((res) => {
+        console.log("res: ", res);
+        if (!res.canceled && res.filePaths.length > 0) {
+          console.log();
+        }
+      });
+    };
     return {
       data: data(),
       columns,
+      addLocalMusic,
     };
   },
 });
 </script>
-<style>
-th.column-money,
-td.column-money {
-  text-align: right !important;
+<style lang="less" scoped>
+.local-music {
+  .ant-table-wrapper {
+    /deep/ .ant-table {
+      background: #333333;
+
+      .ant-table-title {
+        .list-header {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .ant-table-container {
+        /deep/ .ant-table-header {
+          background: #444444;
+        }
+      }
+    }
+  }
 }
 </style>
