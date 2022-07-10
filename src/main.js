@@ -8,15 +8,7 @@ import loadingDirective from "@/components/Base/Loading/directive";
 import tooltipDirective from "@/components/Base/ToolTip/directive";
 
 // ant-design-vue
-import {
-  Button,
-  Input,
-  Table,
-  TableSummary,
-  TableSummaryRow,
-  TableSummaryCell,
-  Switch,
-} from "ant-design-vue";
+import { Button, Input, Table, Switch, Drawer } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 // 最后引入全局样式文件
 import "@/assets/less/index.less";
@@ -26,10 +18,8 @@ const app = createApp(App);
 app.use(Button);
 app.use(Input);
 app.use(Table);
-app.use(TableSummary);
-app.use(TableSummaryRow);
-app.use(TableSummaryCell);
 app.use(Switch);
+app.use(Drawer);
 
 // 注册指令
 app.directive("loading", loadingDirective);

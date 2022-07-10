@@ -2,6 +2,14 @@
   <div class="mini-player">
     <div class="album-cover" @click="openMainPlayer">
       <img src="../../assets/images/album_cover.webp" alt="" />
+      <div class="expand-status-icon">
+        <i
+          :class="expandStatus ? 'icon-direction-down' : 'icon-direction-up'"
+        ></i>
+        <i
+          :class="expandStatus ? 'icon-direction-up' : 'icon-direction-down'"
+        ></i>
+      </div>
     </div>
     <div class="player-opra">
       <i class="icon-iov-pre"></i>
@@ -18,15 +26,19 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
-  setup() {
+  emits: ["openMainPlayer"],
+  setup(props, { emit }) {
+    const expandStatus = ref(false);
     const openMainPlayer = () => {
-      console.log("openMainPlayer");
+      expandStatus.value = !expandStatus.value;
+      emit("openMainPlayer", expandStatus.value);
     };
 
     return {
+      expandStatus,
       openMainPlayer,
     };
   },
@@ -42,9 +54,34 @@ export default defineComponent({
   align-items: center;
 
   .album-cover {
+    height: 40px;
+    width: 40px;
+    position: relative;
     img {
-      height: 40px;
+      width: 100%;
+      height: 100%;
       border-radius: 5px;
+    }
+    .expand-status-icon {
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: black;
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      i {
+        color: white;
+        font-size: 18px;
+      }
+    }
+    .expand-status-icon:hover {
+      opacity: 0.4;
     }
   }
   .player-opra {

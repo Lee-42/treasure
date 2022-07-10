@@ -67,8 +67,9 @@ export default defineComponent({
         color: white;
       }
     }
-    .ant-input {
-      background: rgb(57, 57, 57);
+    /deep/ input {
+      background: transparent;
+      color: #eeeeee;
     }
   }
 }

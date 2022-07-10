@@ -2,28 +2,29 @@
   <!-- <TrafficLight /> -->
   <div class="content">
     <Header></Header>
-    <div class="body">
+    <div id="treasure-body" class="body">
       <SideBar></SideBar>
-      <router-view class="view" />
+      <router-view id="view" class="view" />
     </div>
-    <MiniPlayer></MiniPlayer>
+    <Player></Player>
   </div>
 </template>
-
 
 <script>
 // import TrafficLight from "./components/TrafficLight/index.jsx";
 import Header from "./components/Header";
 import SideBar from "./components/SideBar";
-import MiniPlayer from "./components/MiniPlayer";
+import Player from "./components/Player";
 export default {
   components: {
     // TrafficLight,
     Header,
     SideBar,
-    MiniPlayer,
+    Player,
   },
-  setup() {},
+  setup() {
+    return {};
+  },
 };
 </script>
 
@@ -40,7 +41,6 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-top: 50px;
   .body {
     flex: 1;
     display: flex;
@@ -48,6 +48,7 @@ export default {
     .view {
       flex: 1;
       overflow-y: auto;
+      padding-top: 50px;
     }
   }
 }

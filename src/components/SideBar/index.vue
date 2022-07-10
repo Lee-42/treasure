@@ -30,6 +30,7 @@ export default {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  padding-top: 50px;
 
   .avatar-wrapper {
   }
