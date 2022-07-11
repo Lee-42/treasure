@@ -44,19 +44,23 @@ function getFileSuffix(fileName) {
   }
 }
 
-console.log(getFileSuffix(".localized"));
-
 /**
  * 判断一个文件是否是音频文件
  * @param {String} fileName
  * @returns
  */
 function isAudio(fileName) {
+  let obj = {
+    isAudio: true,
+    suffix: "",
+  };
   if (fileName.startsWith("._")) {
-    return false;
+    obj.isAudio = false;
   } else {
-    return audio_type.includes(getFileSuffix(fileName));
+    obj.suffix = getFileSuffix(fileName) || "";
+    obj.isAudio = audio_type.includes(getFileSuffix(fileName));
   }
+  return obj;
 }
 
 export { showOpenDialog, isAudio };

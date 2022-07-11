@@ -12,6 +12,20 @@
     "postuninstall": "electron-builder install-app-deps"
   },
   "main": "background.js",
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ],
   "dependencies": {
     "ant-design-vue": "^3.2.10",
     "core-js": "^3.6.5",

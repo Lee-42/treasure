@@ -35,6 +35,15 @@ import path from "path";
 
 const music_columns = [
   {
+    title: "序号",
+    dataIndex: "num",
+    ellipsis: true,
+    width: 80,
+    sorter: {
+      compare: (a, b) => a.num - b.num,
+    },
+  },
+  {
     title: "歌名",
     dataIndex: "title",
     ellipsis: true,
@@ -56,7 +65,6 @@ const music_columns = [
     title: "类型",
     dataIndex: "genre",
     ellipsis: true,
-    resizable: true,
   },
 ];
 
@@ -84,11 +92,15 @@ export default defineComponent({
         }
       }
       let files = await fs.readdirSync(filePath);
+      let num = 0;
       files.map(async (f, i) => {
-        if (isAudio(f)) {
+        let audio = isAudio(f);
+        if (audio.isAudio) {
           let mdCommon = await getMusicMetaDataCommon(path.join(filePath, f));
-          data.value.unshift({
-            title: mdCommon.title || f,
+          num++;
+          data.value.push({
+            num: num,
+            title: (mdCommon.title || f).split("." + audio.suffix)[0],
             album: mdCommon.album || "未知",
             artist: mdCommon.artist || "未知",
             genre: mdCommon.genre || "未知",
@@ -114,6 +126,7 @@ export default defineComponent({
     :deep(.ant-table) {
       background: rgb(28, 28, 28);
 
+      // 表格标题
       .ant-table-title {
         color: white;
         .list-header {
@@ -122,13 +135,63 @@ export default defineComponent({
         }
       }
       .ant-table-container {
+        // 表头
         .ant-table-header {
-          table > thead > tr > th {
-            background: rgb(28, 28, 28);
-            color: white;
+          table > thead > tr {
+            th {
+              padding: 7px 7px;
+              background: rgb(28, 28, 28);
+              color: rgb(97, 97, 97);
+              border-bottom: none;
+              background: rgb(32, 31, 32);
+              font-size: 14px;
+              position: relative;
+
+              // 拖拽指示
+              .ant-table-resize-handle {
+                .ant-table-resize-handle-line {
+                  background: none;
+                }
+              }
+              // 排序指示
+              .ant-table-column-sorters {
+                .ant-table-column-sorter {
+                  .ant-table-column-sorter-inner {
+                    span {
+                      display: none;
+                    }
+                    .active {
+                      display: block;
+                    }
+                    .ant-table-column-sorter-up:after {
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      content: "";
+                      width: 100%;
+                      height: 36px;
+                      background: linear-gradient(white, black);
+                    }
+                    .ant-table-column-sorter-down:after {
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      content: "";
+                      width: 100%;
+                      height: 36px;
+                      background: linear-gradient(black, white);
+                    }
+                  }
+                }
+              }
+            }
+            th:hover {
+              background: rgb(37, 37, 37);
+            }
           }
         }
       }
+      // 表主体
       .ant-table-body {
         table > tbody {
           tr:first-child {
@@ -164,61 +227,4 @@ export default defineComponent({
     }
   }
 }
-
-// .ant-table-wrapper {
-//   background: rgb(28, 28, 28);
-//   :deep(.ant-table) {
-//     color: white;
-//     background: rgb(28, 28, 28);
-
-//     .ant-table-title {
-//       background: rgb(28, 28, 28);
-//       border-bottom: 1px solid white;
-
-//       .list-header {
-//         display: flex;
-//         align-items: center;
-//       }
-//     }
-
-//     .ant-table-container {
-//       background: rgb(28, 28, 28);
-
-//       .ant-table-header {
-//         table {
-//           thead > tr > th {
-//             background: rgb(28, 28, 28);
-//             color: white;
-//           }
-//         }
-//       }
-//       .ant-table-body {
-//         tbody {
-//           tr:first-child {
-//             display: none;
-//           }
-//           tr {
-//             td {
-//               padding: 7px 8px;
-//               color: rgb(164, 164, 164);
-//               font-size: 13px;
-//               border-bottom: none;
-//               background: rgb(28, 28, 28);
-//             }
-//           }
-//           tr:hover {
-//             td {
-//               background: rgb(37, 37, 37);
-//             }
-//           }
-//           .odd-line {
-//             td {
-//               background: rgb(32, 31, 32);
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
 </style>
