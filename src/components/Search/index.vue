@@ -67,7 +67,7 @@ export default defineComponent({
         color: white;
       }
     }
-    /deep/ input {
+    :deep(input) {
       background: transparent;
       color: #eeeeee;
     }
