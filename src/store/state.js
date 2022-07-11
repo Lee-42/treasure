@@ -10,3 +10,5 @@ const state = {
   favoriteList: [],
   playHistory: [],
 };
+
+export default state;

@@ -1,5 +1,13 @@
 <template>
   <div class="mini-player">
+    <vue-slider
+      class="progress-slider"
+      v-model="progress"
+      @drag-start="progressDragStart"
+      @dragging="progressDragging"
+      @drag-end="progressDragEnd"
+      @change="progressChange"
+    ></vue-slider>
     <div class="album-cover" @click="openMainPlayer">
       <img src="../../assets/images/album_cover.webp" alt="" />
       <div class="expand-status-icon">
@@ -17,29 +25,63 @@
       <i class="icon-iov-next"></i>
     </div>
     <div class="player-tool">
-      <i class="icon-shunxubofang-copy"></i>
+      <i class="icon-shunxubofang"></i>
       <i class="icon-bofangduilie"></i>
       <span>词</span>
-      <i class="icon-soound-min-full"></i>
+      <Volume @volumeChange="handleVolumeChange" />
     </div>
   </div>
 </template>
 
 <script>
 import { defineComponent, ref } from "vue";
+import Volume from "./Volume";
+import VueSlider from "vue-slider-component";
+import "vue-slider-component/theme/default.css";
 
 export default defineComponent({
+  components: {
+    Volume,
+    VueSlider,
+  },
   emits: ["openMainPlayer"],
   setup(props, { emit }) {
     const expandStatus = ref(false);
+    const progress = ref(28);
     const openMainPlayer = () => {
       expandStatus.value = !expandStatus.value;
       emit("openMainPlayer", expandStatus.value);
     };
 
+    const progressDragStart = (e) => {
+      console.log("progressDragStart: ", e);
+    };
+
+    const progressDragging = (e) => {
+      console.log("progressDragging: ", e);
+    };
+
+    const progressDragEnd = (e) => {
+      console.log("progressDragEnd: ", e);
+    };
+
+    const progressChange = (e) => {
+      console.log("progressChange: ", e);
+    };
+
+    const handleVolumeChange = (e) => {
+      console.log("handleVolumeChange: ", e);
+    };
+
     return {
       expandStatus,
+      progress,
       openMainPlayer,
+      progressDragStart,
+      progressDragging,
+      progressDragEnd,
+      progressChange,
+      handleVolumeChange,
     };
   },
 });
@@ -52,6 +94,36 @@ export default defineComponent({
   padding: 10px;
   display: flex;
   align-items: center;
+  position: relative;
+
+  //进度条
+  :deep(.progress-slider) {
+    position: absolute;
+    top: -7px;
+    left: 0px;
+    right: 0px;
+    height: 2px !important;
+
+    .vue-slider-rail {
+      background: transparent !important;
+      .vue-slider-process {
+        background: rgb(199, 39, 38) !important;
+      }
+      .vue-slider-dot {
+        display: none;
+        .vue-slider-dot-handle {
+          width: 12px;
+          height: 12px;
+          background: rgb(199, 39, 38) !important;
+        }
+      }
+    }
+  }
+  :deep(.vue-slider):hover {
+    .vue-slider-dot {
+      display: inline-block;
+    }
+  }
 
   .album-cover {
     height: 40px;

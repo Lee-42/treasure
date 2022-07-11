@@ -17,7 +17,7 @@
       </template>
       <template #title>
         <div class="list-header">
-          <PlayListBtn></PlayListBtn>
+          <PlayListBtn @play="handlePlay"></PlayListBtn>
           <a-button type="primary" size="small" @click="addLocalMusic"
             >添加</a-button
           >
@@ -108,6 +108,10 @@ export default defineComponent({
         }
       });
     };
+
+    const handlePlay = () => {
+      console.log("添加到播放列表");
+    };
     return {
       data,
       columns,
@@ -115,6 +119,7 @@ export default defineComponent({
       handleResizeColumn: (w, col) => {
         col.width = w;
       },
+      handlePlay,
     };
   },
 });
