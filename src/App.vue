@@ -1,7 +1,9 @@
 <template>
   <!-- <TrafficLight /> -->
   <div class="content">
-    <Header></Header>
+    <div class="header-wrapper">
+      <Header></Header>
+    </div>
     <div id="treasure-body" class="body">
       <SideBar></SideBar>
       <router-view id="view" class="view" />
@@ -41,6 +43,8 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  .header-wrapper {
+  }
   .body {
     flex: 1;
     display: flex;

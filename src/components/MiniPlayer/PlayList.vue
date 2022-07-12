@@ -7,7 +7,6 @@
       placement="right"
       :visible="visible"
       :mask="false"
-      :get-container="'#treasure-body'"
     >
     </a-drawer>
     <i class="icon-bofangduilie" @click="toggleVisible"></i>
@@ -24,7 +23,6 @@ export default defineComponent({
       visible.value = !visible.value;
       console.log("show.value", visible.value);
     };
-
     return {
       visible,
       toggleVisible,
@@ -33,14 +31,11 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less">
-.play-list-drawer {
-  z-index: 3;
-}
-</style>
-
 <style lang="less" scoped>
 .play-list {
+  .play-list-drawer {
+    z-index: 3;
+  }
   i {
     color: rgb(176, 176, 176);
     font-size: 18px;

@@ -46,7 +46,7 @@ export default {
   left: 0;
   right: 0;
   align-items: center;
-  z-index: 10;
+  z-index: 5;
 
   .forward-backward-wrapper {
     position: absolute;
