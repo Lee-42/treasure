@@ -25,8 +25,8 @@
       <i class="icon-iov-next"></i>
     </div>
     <div class="player-tool">
-      <i class="icon-shunxubofang"></i>
-      <i class="icon-bofangduilie"></i>
+      <PlayMode />
+      <PlayList />
       <span>词</span>
       <Volume @volumeChange="handleVolumeChange" />
     </div>
@@ -35,12 +35,16 @@
 
 <script>
 import { defineComponent, ref } from "vue";
+import PlayMode from "./PlayMode.vue";
+import PlayList from "./PlayList.vue";
 import Volume from "./Volume";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
 
 export default defineComponent({
   components: {
+    PlayMode,
+    PlayList,
     Volume,
     VueSlider,
   },
