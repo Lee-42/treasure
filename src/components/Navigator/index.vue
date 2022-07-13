@@ -34,6 +34,18 @@ const routers = [
     icon: "icon-zuijinchangyong",
     label: "最近播放",
   },
+  {
+    path: "/indexdb",
+    name: "IndexDB",
+    icon: "icon-zuijinchangyong",
+    label: "测试IndexDB",
+  },
+  {
+    path: "/dexie",
+    name: "Dexie",
+    icon: "icon-zuijinchangyong",
+    label: "测试Dexie",
+  },
 ];
 
 export default {

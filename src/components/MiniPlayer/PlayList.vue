@@ -3,7 +3,6 @@
     <a-drawer
       class="play-list-drawer"
       :width="420"
-      style="z-index: 3"
       placement="right"
       :visible="visible"
       :mask="false"
@@ -31,11 +30,14 @@ export default defineComponent({
 });
 </script>
 
+<style lang="less" >
+.play-list-drawer {
+  z-index: 3;
+}
+</style>
+
 <style lang="less" scoped>
 .play-list {
-  .play-list-drawer {
-    z-index: 3;
-  }
   i {
     color: rgb(176, 176, 176);
     font-size: 18px;

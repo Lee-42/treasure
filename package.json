@@ -29,6 +29,7 @@
   "dependencies": {
     "ant-design-vue": "^3.2.10",
     "core-js": "^3.6.5",
+    "dexie": "^3.2.2",
     "fs-extra": "^10.1.0",
     "music-metadata": "^7.12.4",
     "vue": "^3.0.0",
