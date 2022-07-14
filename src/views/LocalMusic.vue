@@ -3,6 +3,7 @@
     <a-table
       :columns="columns"
       :data-source="data"
+      :custom-row="customRow"
       @resizeColumn="handleResizeColumn"
       :pagination="false"
       sticky
@@ -115,6 +116,17 @@ export default defineComponent({
       // });
     };
 
+    /**
+     * 双击行
+     */
+    const customRow = (record) => {
+      return {
+        ondblclick: () => {
+          console.log(record);
+        },
+      };
+    };
+
     const handlePlay = () => {
       console.log("添加到播放列表");
     };
@@ -126,6 +138,7 @@ export default defineComponent({
         col.width = w;
       },
       handlePlay,
+      customRow,
     };
   },
 });

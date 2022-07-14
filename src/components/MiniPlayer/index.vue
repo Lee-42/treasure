@@ -8,14 +8,14 @@
       @drag-end="progressDragEnd"
       @change="progressChange"
     ></vue-slider>
-    <div class="album-cover" @click="openMainPlayer">
+    <div class="album-cover" @click="toggleFullScreen">
       <img src="../../assets/images/album_cover.webp" alt="" />
       <div class="expand-status-icon">
         <i
-          :class="expandStatus ? 'icon-direction-down' : 'icon-direction-up'"
+          :class="fullScreen ? 'icon-direction-down' : 'icon-direction-up'"
         ></i>
         <i
-          :class="expandStatus ? 'icon-direction-up' : 'icon-direction-down'"
+          :class="fullScreen ? 'icon-direction-up' : 'icon-direction-down'"
         ></i>
       </div>
     </div>
@@ -34,12 +34,14 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 import PlayMode from "./PlayMode.vue";
 import PlayList from "./PlayList.vue";
 import Volume from "./Volume";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
+import { watch } from "original-fs";
 
 export default defineComponent({
   components: {
@@ -48,13 +50,15 @@ export default defineComponent({
     Volume,
     VueSlider,
   },
-  emits: ["openMainPlayer"],
-  setup(props, { emit }) {
-    const expandStatus = ref(false);
+  setup() {
+    // data
     const progress = ref(28);
-    const openMainPlayer = () => {
-      expandStatus.value = !expandStatus.value;
-      emit("openMainPlayer", expandStatus.value);
+
+    // vuex
+    const store = useStore();
+    const fullScreen = computed(() => store.state.fullScreen);
+    const toggleFullScreen = () => {
+      store.commit("setFullScreen", !fullScreen.value);
     };
 
     const progressDragStart = (e) => {
@@ -78,9 +82,9 @@ export default defineComponent({
     };
 
     return {
-      expandStatus,
+      fullScreen,
       progress,
-      openMainPlayer,
+      toggleFullScreen,
       progressDragStart,
       progressDragging,
       progressDragEnd,
