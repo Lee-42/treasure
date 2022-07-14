@@ -32,6 +32,7 @@ import PlayListBtn from "../components/Base/PlayListBtn";
 import { showOpenDialog, isAudio, getMusicMetaDataCommon } from "../utils";
 import fs from "fs-extra";
 import path from "path";
+import { db } from "../db/index.js";
 
 const music_columns = [
   {
@@ -91,22 +92,27 @@ export default defineComponent({
           filePath = res.filePaths[0];
         }
       }
-      let files = await fs.readdirSync(filePath);
+      // let files = await fs.readdirSync(filePath);
       let num = 0;
-      files.map(async (f, i) => {
-        let audio = isAudio(f);
-        if (audio.isAudio) {
-          let mdCommon = await getMusicMetaDataCommon(path.join(filePath, f));
-          num++;
-          data.value.push({
-            num: num,
-            title: (mdCommon.title || f).split("." + audio.suffix)[0],
-            album: mdCommon.album || "未知",
-            artist: mdCommon.artist || "未知",
-            genre: mdCommon.genre || "未知",
-          });
-        }
+      db.local_music.each((song) => {
+        data.value.push(song);
       });
+      // files.map(async (f, i) => {
+      //   let audio = isAudio(f);
+      //   if (audio.isAudio) {
+      //     let mdCommon = await getMusicMetaDataCommon(path.join(filePath, f));
+      //     num++;
+      //     let song = {
+      //       num: num,
+      //       title: (mdCommon.title || f).split("." + audio.suffix)[0],
+      //       album: mdCommon.album || "未知",
+      //       artist: mdCommon.artist || "未知",
+      //       genre: mdCommon.genre || "未知",
+      //     };
+      //     await db.local_music.add(song);
+      //     data.value.push(song);
+      //   }
+      // });
     };
 
     const handlePlay = () => {
