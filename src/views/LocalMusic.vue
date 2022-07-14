@@ -18,7 +18,10 @@
       </template>
       <template #title>
         <div class="list-header">
-          <PlayListBtn @play="handlePlay"></PlayListBtn>
+          <PlayListBtn
+            @play-all="handlePlayAll"
+            @add-to-play-list="handleAddToPlayList"
+          ></PlayListBtn>
           <a-button type="primary" size="small" @click="addLocalMusic"
             >添加</a-button
           >
@@ -31,9 +34,8 @@
 import { defineComponent, onMounted, ref } from "vue";
 import PlayListBtn from "../components/Base/PlayListBtn";
 import { showOpenDialog, isAudio, getMusicMetaDataCommon } from "../utils";
-import fs from "fs-extra";
-import path from "path";
 import { db } from "../db/index.js";
+import { useStore } from "vuex";
 
 const music_columns = [
   {
@@ -75,8 +77,12 @@ export default defineComponent({
     PlayListBtn,
   },
   setup() {
+    // data
     let data = ref([]);
     let columns = ref(music_columns);
+
+    // vuex
+    const store = useStore();
     onMounted(() => {
       addLocalMusic("/Volumes/T7/Music");
     });
@@ -127,9 +133,20 @@ export default defineComponent({
       };
     };
 
-    const handlePlay = () => {
+    /**
+     * 播放全部
+     */
+    const handlePlayAll = () => {
+      store.dispatch("selectPlay", { list: data.value, index: 0 });
+    };
+
+    /**
+     * 添加到播放列表
+     */
+    const handleAddToPlayList = () => {
       console.log("添加到播放列表");
     };
+
     return {
       data,
       columns,
@@ -137,7 +154,8 @@ export default defineComponent({
       handleResizeColumn: (w, col) => {
         col.width = w;
       },
-      handlePlay,
+      handlePlayAll,
+      handleAddToPlayList,
       customRow,
     };
   },

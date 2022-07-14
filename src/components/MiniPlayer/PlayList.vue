@@ -7,24 +7,34 @@
       :visible="visible"
       :mask="false"
     >
+      <a-button type="primary" @click="getList">获取播放列表</a-button>
     </a-drawer>
-    <i class="icon-bofangduilie" @click="toggleVisible"></i>
+    <i class="icon-bofangduilie" @click="() => (visible = !visible)"></i>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   setup() {
+    // data
     const visible = ref(false);
-    const toggleVisible = () => {
-      visible.value = !visible.value;
-      console.log("show.value", visible.value);
+
+    // vuex
+    const store = useStore();
+    const sequenceList = computed(() => store.state.sequenceList);
+
+    // methods
+    const getList = () => {
+      console.log("getList: ", sequenceList.value);
     };
+
     return {
       visible,
-      toggleVisible,
+      getList,
+      sequenceList,
     };
   },
 });

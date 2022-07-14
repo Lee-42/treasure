@@ -13,13 +13,13 @@
 <script>
 export default {
   name: "play-list-btn",
-  emits: ["play", "add-to-list"],
+  emits: ["play-all", "add-to-play-list"],
   methods: {
     play() {
-      this.$emit("play");
+      this.$emit("play-all");
     },
     add() {
-      this.$emit("add-to-list");
+      this.$emit("add-to-play-list");
     },
   },
 };
