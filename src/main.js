@@ -9,8 +9,7 @@ import tooltipDirective from "@/components/Base/ToolTip/directive";
 
 // ant-design-vue
 import { Button, Input, Table, Switch, Drawer } from "ant-design-vue";
-import "ant-design-vue/dist/antd.css";
-// 最后引入全局样式文件
+// 引入全局样式文件
 import "@/assets/less/index.less";
 
 const app = createApp(App);

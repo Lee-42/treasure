@@ -17,17 +17,12 @@
 <script>
 import Avatar from "../Avatar";
 import Navigator from "../Navigator";
-import { setTheme } from "../../assets/less/themes";
 import { onMounted } from "vue";
 export default {
   components: { Avatar, Navigator },
   setup() {
-    onMounted(() => {
-      setTheme("dark");
-    });
-    const changeTheme = () => {
-      setTheme("light");
-    };
+    onMounted(() => {});
+    const changeTheme = () => {};
     return { changeTheme };
   },
 };
@@ -51,7 +46,6 @@ export default {
   .block {
     width: 100px;
     height: 100px;
-    background: @color-background;
   }
 }
 </style>

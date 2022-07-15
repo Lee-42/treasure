@@ -90,15 +90,15 @@ export default defineComponent({
      * 添加本地音乐
      */
     const addLocalMusic = async (filePath) => {
-      if (typeof filePath !== "string") {
-        let res = await showOpenDialog({
-          title: "添加本地音乐",
-          properties: ["openDirectory"],
-        });
-        if (!res.canceled && res.filePaths.length > 0) {
-          filePath = res.filePaths[0];
-        }
-      }
+      // if (typeof filePath !== "string") {
+      //   let res = await showOpenDialog({
+      //     title: "添加本地音乐",
+      //     properties: ["openDirectory"],
+      //   });
+      //   if (!res.canceled && res.filePaths.length > 0) {
+      //     filePath = res.filePaths[0];
+      //   }
+      // }
       // let files = await fs.readdirSync(filePath);
       let num = 0;
       db.local_music.each((song) => {

@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
@@ -15,6 +16,18 @@
         continue.</strong
       >
     </noscript>
+    <script>
+      window.less = {
+        async: false,
+        env: "production",
+      };
+    </script>
+    <link
+      rel="stylesheet/less"
+      type="text/css"
+      href="<%= BASE_URL %>css/color.less"
+    />
+    <script src="https://cdn.bootcss.com/less.js/2.7.3/less.min.js"></script>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
