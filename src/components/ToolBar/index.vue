@@ -2,12 +2,14 @@
   <div class="toolbar">
     <i class="icon-setting"></i>
     <i class="icon-xinfeng"></i>
-    <i class="icon-mask"></i>
+    <Theme />
     <i class="icon-smallscreen"></i>
   </div>
 </template>
 <script>
+import Theme from "./theme.vue";
 export default {
+  components: { Theme },
   setup() {},
 };
 </script>
@@ -15,6 +17,8 @@ export default {
 
 <style lang="less" scoped>
 .toolbar {
+  display: flex;
+  align-items: center;
   i {
     color: #777777;
     font-size: 20px;

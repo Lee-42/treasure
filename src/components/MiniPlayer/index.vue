@@ -118,10 +118,12 @@ export default defineComponent({
         background: @primary-color !important;
       }
       .vue-slider-dot {
-        display: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         .vue-slider-dot-handle {
-          width: 12px;
           height: 12px;
+          width: 12px;
           background: @primary-color !important;
         }
       }

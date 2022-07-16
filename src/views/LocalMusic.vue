@@ -22,9 +22,7 @@
             @play-all="handlePlayAll"
             @add-to-play-list="handleAddToPlayList"
           ></PlayListBtn>
-          <a-button type="primary" size="small" @click="addLocalMusic"
-            >添加</a-button
-          >
+          <div class="add-local-music" @click="addLocalMusic">添加</div>
         </div>
       </template>
     </a-table>
@@ -36,6 +34,9 @@ import PlayListBtn from "../components/Base/PlayListBtn";
 import { showOpenDialog, isAudio, getMusicMetaDataCommon } from "../utils";
 import { db } from "../db/index.js";
 import { useStore } from "vuex";
+import fs from "fs";
+import path from "path";
+
 const music_columns = [
   {
     title: "序号",
@@ -83,42 +84,50 @@ export default defineComponent({
     // vuex
     const store = useStore();
     onMounted(() => {
-      // addLocalMusic("/Volumes/T7/Music");
+      loadLocalMosic();
     });
+    /**
+     * 加载本地音乐
+     */
+    const loadLocalMosic = () => {
+      db.local_music.each((song) => {
+        data.value.push(song);
+      });
+    };
     /**
      * 添加本地音乐
      */
     const addLocalMusic = async (filePath) => {
-      // if (typeof filePath !== "string") {
-      //   let res = await showOpenDialog({
-      //     title: "添加本地音乐",
-      //     properties: ["openDirectory"],
-      //   });
-      //   if (!res.canceled && res.filePaths.length > 0) {
-      //     filePath = res.filePaths[0];
-      //   }
-      // }
-      // let files = await fs.readdirSync(filePath);
-      // let num = 0;
-      // db.local_music.each((song) => {
-      //   data.value.push(song);
-      // });
-      // files.map(async (f, i) => {
-      //   let audio = isAudio(f);
-      //   if (audio.isAudio) {
-      //     let mdCommon = await getMusicMetaDataCommon(path.join(filePath, f));
-      //     num++;
-      //     let song = {
-      //       num: num,
-      //       title: (mdCommon.title || f).split("." + audio.suffix)[0],
-      //       album: mdCommon.album || "未知",
-      //       artist: mdCommon.artist || "未知",
-      //       genre: mdCommon.genre || "未知",
-      //     };
-      //     await db.local_music.add(song);
-      //     data.value.push(song);
-      //   }
-      // });
+      if (typeof filePath !== "string") {
+        let res = await showOpenDialog({
+          title: "添加本地音乐",
+          properties: ["openDirectory"],
+        });
+        if (!res.canceled && res.filePaths.length > 0) {
+          filePath = res.filePaths[0];
+        }
+      }
+      let files = await fs.readdirSync(filePath);
+      let num = 0;
+      files.map(async (f, i) => {
+        let audio = isAudio(f);
+        if (audio.isAudio) {
+          let mdCommon = await getMusicMetaDataCommon(path.join(filePath, f));
+          num++;
+          let song = {
+            num: num,
+            title: (mdCommon.title || f).split("." + audio.suffix)[0],
+            album: mdCommon.album || "未知",
+            artist: mdCommon.artist || "未知",
+            genre: mdCommon.genre || "未知",
+          };
+          try {
+            await db.local_music.add(song);
+          } catch (err) {
+            console.log("添加本地歌曲失败: ", err);
+          }
+        }
+      });
     };
 
     /**
@@ -173,6 +182,17 @@ export default defineComponent({
         .list-header {
           display: flex;
           align-items: center;
+
+          .add-local-music {
+            width: 100px;
+            height: 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            letter-spacing: 5px;
+            background: @primary-color;
+          }
         }
       }
       .ant-table-container {
@@ -226,7 +246,7 @@ export default defineComponent({
               }
             }
             th:hover {
-              background: rgb(37, 37, 37);
+              background: @hover-color;
             }
           }
         }
