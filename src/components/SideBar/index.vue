@@ -7,10 +7,6 @@
     <div class="navigator-wrapper">
       <Navigator />
     </div>
-    <a-button type="primary" size="small" @click="changeTheme"
-      >修改主题</a-button
-    >
-    <div class="block"></div>
   </div>
 </template>
 
@@ -18,11 +14,15 @@
 import Avatar from "../Avatar";
 import Navigator from "../Navigator";
 import { onMounted } from "vue";
+import { setTheme } from "../../assets/less/theme";
+
 export default {
   components: { Avatar, Navigator },
   setup() {
     onMounted(() => {});
-    const changeTheme = () => {};
+    const changeTheme = () => {
+      setTheme("dark");
+    };
     return { changeTheme };
   },
 };
@@ -32,7 +32,7 @@ export default {
 .sidebar {
   width: 200px;
   height: 100%;
-  background: #333333;
+  background: @layout-side-bg;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -43,9 +43,13 @@ export default {
   .navigator-wrapper {
     flex: 1;
   }
+  .ant-btn {
+    background: @primary-color;
+  }
   .block {
     width: 100px;
     height: 100px;
+    background: @primary-color;
   }
 }
 </style>

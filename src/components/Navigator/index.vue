@@ -73,7 +73,6 @@ export default {
 <style lang="less" scoped>
 .navigator {
   height: 100%;
-  background: #666666;
 
   .navigator-item {
     height: 40px;
@@ -84,7 +83,7 @@ export default {
       height: 100%;
       padding-left: 12px;
       text-decoration: none;
-      color: rgb(156, 156, 156);
+      color: @text-color-2;
 
       i {
         font-size: 16px;
@@ -96,12 +95,12 @@ export default {
     }
   }
   .navigator-item:hover {
-    background: #222222;
+    background: @hover-color;
   }
   .navigator-item-active {
-    background: #222222;
+    background: @hover-color;
     a {
-      color: rgb(191, 36, 37);
+      color: @primary-color;
     }
   }
 }

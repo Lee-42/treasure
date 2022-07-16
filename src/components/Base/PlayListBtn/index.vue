@@ -29,15 +29,16 @@ export default {
 <style lang="less" scoped>
 .play-list-btn {
   height: 30px;
-  background: rgb(200, 45, 45);
+  background: @primary-color;
   display: flex;
   width: 135px;
   border-radius: 15px;
+  color: #eeeeee;
   cursor: pointer;
   .play {
     width: 100px;
     height: 100%;
-    border-right: 1px solid rgb(216, 63, 60);
+    border-right: 1px solid @primary-color-2;
     display: flex;
     align-items: center;
     justify-content: center;

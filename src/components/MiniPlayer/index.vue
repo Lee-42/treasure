@@ -98,7 +98,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .mini-player {
   height: 60px;
-  background: rgb(28, 28, 28);
+  background: @layout-header-bg;
   padding: 10px;
   display: flex;
   align-items: center;
@@ -115,14 +115,14 @@ export default defineComponent({
     .vue-slider-rail {
       background: transparent !important;
       .vue-slider-process {
-        background: rgb(199, 39, 38) !important;
+        background: @primary-color !important;
       }
       .vue-slider-dot {
         display: none;
         .vue-slider-dot-handle {
           width: 12px;
           height: 12px;
-          background: rgb(199, 39, 38) !important;
+          background: @primary-color !important;
         }
       }
     }
@@ -169,7 +169,7 @@ export default defineComponent({
     align-items: center;
     margin: 0 auto;
     i {
-      color: rgb(199, 37, 38);
+      color: @primary-color;
       font-size: 24px;
       margin: 10px;
     }

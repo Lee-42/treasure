@@ -2,7 +2,7 @@
   <!-- <TrafficLight /> -->
   <div class="content">
     <div class="header-wrapper">
-      <!-- <Header></Header> -->
+      <Header></Header>
     </div>
     <div id="treasure-body" class="body">
       <SideBar></SideBar>

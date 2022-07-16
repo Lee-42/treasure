@@ -37,7 +37,7 @@ export default {
 <style lang="less" scoped>
 .header {
   height: 50px;
-  background: rgb(32, 32, 32);
+  background: @layout-header-bg;
   -webkit-app-region: drag;
   position: fixed;
   display: flex;

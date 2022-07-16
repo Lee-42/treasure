@@ -1,3 +1,26 @@
 // 颜色定义规范
-@color-background: #1c1c1c;
-@color-text: #eeeeee;
+@primary-color: var(--primary-color, #5217e8);
+@primary-color-2: var(--primary-color, #7d47f2);
+@primary-color-3: var(--primary-color, #b797f7);
+@layout-body-bg: var(--layout-body-bg, #ffffff);
+@layout-header-bg: var(--layout-body-bg, #f9f9f9);
+@layout-side-bg: var(--layout-body-bg, #ededed);
+@hover-color: var(--hover-color, #f2f2f4);
+@text-color: var(--text-color, #000000);
+@text-color-2: var(--text-color-2, #333333);
+@text-color-3: var(--text-color-3, #555555);
+
+// 导出变量 :export 形式导出
+:export {
+  name: "less";
+  primary-color: @primary-color;
+  primary-color-2: @primary-color-2;
+  primary-color-3: @primary-color-3;
+  layout-body-bg: @layout-body-bg;
+  layout-header-bg: @layout-header-bg;
+  layout-side-bg: @layout-side-bg;
+  hover-color: @hover-color;
+  text-color: @text-color;
+  text-color-2: @text-color-2;
+  text-color-3: @text-color-3;
+}

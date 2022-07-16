@@ -36,7 +36,6 @@ import PlayListBtn from "../components/Base/PlayListBtn";
 import { showOpenDialog, isAudio, getMusicMetaDataCommon } from "../utils";
 import { db } from "../db/index.js";
 import { useStore } from "vuex";
-
 const music_columns = [
   {
     title: "序号",
@@ -84,7 +83,7 @@ export default defineComponent({
     // vuex
     const store = useStore();
     onMounted(() => {
-      addLocalMusic("/Volumes/T7/Music");
+      // addLocalMusic("/Volumes/T7/Music");
     });
     /**
      * 添加本地音乐
@@ -100,10 +99,10 @@ export default defineComponent({
       //   }
       // }
       // let files = await fs.readdirSync(filePath);
-      let num = 0;
-      db.local_music.each((song) => {
-        data.value.push(song);
-      });
+      // let num = 0;
+      // db.local_music.each((song) => {
+      //   data.value.push(song);
+      // });
       // files.map(async (f, i) => {
       //   let audio = isAudio(f);
       //   if (audio.isAudio) {
@@ -166,11 +165,11 @@ export default defineComponent({
 .local-music {
   .ant-table-wrapper {
     :deep(.ant-table) {
-      background: rgb(28, 28, 28);
+      background: @layout-body-bg;
 
       // 表格标题
       .ant-table-title {
-        color: white;
+        color: @text-color;
         .list-header {
           display: flex;
           align-items: center;
@@ -182,10 +181,9 @@ export default defineComponent({
           table > thead > tr {
             th {
               padding: 7px 7px;
-              background: rgb(28, 28, 28);
-              color: rgb(97, 97, 97);
+              background: @layout-side-bg;
+              color: @text-color;
               border-bottom: none;
-              background: rgb(32, 31, 32);
               font-size: 14px;
               position: relative;
 
@@ -251,17 +249,17 @@ export default defineComponent({
               color: rgb(164, 164, 164);
               font-size: 13px;
               border-bottom: none;
-              background: rgb(28, 28, 28);
+              background: @layout-body-bg;
             }
           }
           tr:hover {
             td {
-              background: rgb(37, 37, 37);
+              background: @hover-color;
             }
           }
           .odd-line {
             td {
-              background: rgb(32, 31, 32);
+              background: @layout-side-bg;
             }
           }
         }
