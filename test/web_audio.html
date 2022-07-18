@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const audioContext = new AudioContext();
+
+      // 现在可以通过context来创建一些audio node
+      // web audio是运行在javascript环境的。所以 audio必须以javascript可以理解的方式存储
+      // 这是通过 audio buffer完成的
+      // audio buffer表示一段持续的声音, 并且在任何一段声音里都存储着信号的幅值
+
+      console.log(audioContext.sampleRate); //48000 人类听觉范围的两倍
+      // 下面这个buffer为我们提供了一个可容纳一秒钟音频数据的单声道缓冲区
+      const buffer = audioContext.createBuffer(
+        1, // 通道数
+        audioContext.sampleRate * 1,
+        audioContext.sampleRate
+      );
+
+      // 读缓冲区的数据
+      const channelData = buffer.getChannelData(0);
+      console.log(channelData); // 返回一个float32的数组
+
+      // 加入数据, 产生白噪声
+      for (let i = 0; i < buffer.length; i++) {
+        channelData[i] = Math.random() * 2 - 1;
+      }
+
+      // 现在我们可以将这个audio node连接到其他的audio node, 比如 audio context destination node
+      // destination node是一个特别的node, 它可以直接连接到audio的context
+      // 在连接到destination node之前, 我们调低一下音量。 使用gain node
+      const primaryGainControl = audioContext.createGain();
+      primaryGainControl.gain.setValueAtTime(0.05, 0);
+
+      primaryGainControl.connect(audioContext.destination);
+
+      const button = document.createElement("button");
+      button.innerText = "White Noise";
+      button.addEventListener("click", () => {
+        // 播放这段音频之前还有一些事要做。
+        // 我们要创建一个buffer source。其实就是一个audio node, 它拿着我们的buffer并进行处理
+        const whiteNoiseSource = audioContext.createBufferSource();
+        whiteNoiseSource.buffer = buffer;
+        whiteNoiseSource.connect(primaryGainControl);
+        whiteNoiseSource.start();
+      });
+      document.body.appendChild(button);
+
+      // 过滤掉高频
+      const snareFilter = audioContext.createBiquadFilter();
+      snareFilter.type = "highpass";
+      snareFilter.frequency.value = 1500;
+      snareFilter.connect(primaryGainControl);
+      const snareButton = document.createElement("button");
+      snareButton.innerText = "Snare";
+      snareButton.addEventListener("click", () => {
+        const whiteNoiseSource = audioContext.createBufferSource();
+        whiteNoiseSource.buffer = buffer;
+        whiteNoiseSource.connect(snareFilter);
+        whiteNoiseSource.start();
+      });
+      document.body.appendChild(snareButton);
+    </script>
+  </body>
+</html>

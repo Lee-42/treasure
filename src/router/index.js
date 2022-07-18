@@ -46,6 +46,12 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "dexie" */ "../views/Dexie.vue"),
   },
+  {
+    path: "/audio",
+    name: "Audio",
+    component: () =>
+      import(/* webpackChunkName: "audio" */ "../views/Audio.vue"),
+  },
 ];
 
 const router = createRouter({

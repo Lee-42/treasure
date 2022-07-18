@@ -46,6 +46,12 @@ const routers = [
     icon: "icon-zuijinchangyong",
     label: "测试Dexie",
   },
+  {
+    path: "/audio",
+    name: "Audio",
+    icon: "icon-zuijinchangyong",
+    label: "测试Audio",
+  },
 ];
 
 export default {

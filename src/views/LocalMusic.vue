@@ -36,6 +36,7 @@ import { db } from "../db/index.js";
 import { useStore } from "vuex";
 import fs from "fs";
 import path from "path";
+import { Howl } from "howler";
 
 const music_columns = [
   {
@@ -120,6 +121,7 @@ export default defineComponent({
             album: mdCommon.album || "未知",
             artist: mdCommon.artist || "未知",
             genre: mdCommon.genre || "未知",
+            url: path.join(filePath, f),
           };
           try {
             await db.local_music.add(song);

@@ -25,10 +25,16 @@ export default defineComponent({
     // vuex
     const store = useStore();
     const sequenceList = computed(() => store.state.sequenceList);
+    const playList = computed(() => store.state.playlist);
+    const currentIndex = computed(() => store.state.currentIndex);
+    const currentSong = computed(() => store.getters.currentSong);
 
     // methods
     const getList = () => {
-      console.log("getList: ", sequenceList.value);
+      // console.log("getList: ", sequenceList.value);
+      // console.log("getList: ", playList.value);
+      // console.log("currentIndex: ", currentIndex.value);
+      console.log("currentSong: ", currentSong.value);
     };
 
     return {
