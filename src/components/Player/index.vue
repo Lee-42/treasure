@@ -8,17 +8,6 @@
       @drag-end="progressDragEnd"
       @change="progressChange"
     ></vue-slider>
-    <!-- <div class="album-cover" @click="toggleFullScreen">
-      <img src="../../assets/images/album_cover.webp" alt="" />
-      <div class="expand-status-icon">
-        <i
-          :class="fullScreen ? 'icon-direction-down' : 'icon-direction-up'"
-        ></i>
-        <i
-          :class="fullScreen ? 'icon-direction-up' : 'icon-direction-down'"
-        ></i>
-      </div>
-    </div> -->
     <PlayDetail />
     <PlayBtn />
     <div class="player-tool">
@@ -40,7 +29,7 @@ import PlayList from "./PlayList.vue";
 import Volume from "./Volume";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
-import { Howl } from "howler";
+import { Howl, Howler } from "howler";
 
 export default defineComponent({
   components: {
@@ -54,15 +43,18 @@ export default defineComponent({
   setup() {
     // data
     const progress = ref(28);
+    let audio = null;
     // vuex
     const store = useStore();
-    const fullScreen = computed(() => store.state.fullScreen);
     const currentSong = computed(() => store.getters.currentSong);
+    const playingState = computed(() => store.state.playing);
     watch(currentSong, (newSong) => {
       if (!newSong.id || !newSong.url) {
         return;
       }
-      const audio = new Howl({
+      console.log("currentSong: ", currentSong.value);
+      Howler.unload();
+      audio = new Howl({
         src: [
           decodeURIComponent(
             `http://localhost:6789/audio?audio_path=${newSong.url}`
@@ -70,12 +62,18 @@ export default defineComponent({
         ],
         html5: true,
       });
-      audio.play();
-      store.commit("setPlayingState", true);
+      setTimeout(() => {
+        audio.play();
+      });
     });
-    const toggleFullScreen = () => {
-      store.commit("setFullScreen", !fullScreen.value);
-    };
+    watch(playingState, (isPlaying) => {
+      console.log("playingState: ", isPlaying);
+      if (isPlaying) {
+        audio && audio.play();
+      } else {
+        audio.pause();
+      }
+    });
 
     const progressDragStart = (e) => {
       console.log("progressDragStart: ", e);
@@ -98,9 +96,7 @@ export default defineComponent({
     };
 
     return {
-      fullScreen,
       progress,
-      toggleFullScreen,
       progressDragStart,
       progressDragging,
       progressDragEnd,

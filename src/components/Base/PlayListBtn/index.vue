@@ -31,12 +31,11 @@ export default {
   height: 30px;
   background: @primary-color;
   display: flex;
-  width: 135px;
   border-radius: 4px;
   color: #eeeeee;
   cursor: pointer;
   .play {
-    width: 100px;
+    width: 80px;
     height: 100%;
     border-right: 1px solid @primary-color-2;
     display: flex;

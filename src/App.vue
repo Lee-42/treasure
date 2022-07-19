@@ -4,7 +4,7 @@
     <div class="header-wrapper">
       <Header></Header>
     </div>
-    <div id="treasure-body" class="body">
+    <div id="treasure-body" class="treasure-body">
       <SideBar></SideBar>
       <!-- <router-view id="view" class="view"></router-view> -->
       <router-view id="view" class="view" v-slot="{ Component }">
@@ -44,7 +44,6 @@ export default {
 };
 </script>
 
-
 <style lang="less">
 #app {
   width: 100%;
@@ -59,10 +58,11 @@ export default {
   flex-direction: column;
   .header-wrapper {
   }
-  .body {
+  .treasure-body {
     flex: 1;
     display: flex;
     overflow-y: auto;
+    z-index: 0;
     .view {
       flex: 1;
       overflow-y: auto;

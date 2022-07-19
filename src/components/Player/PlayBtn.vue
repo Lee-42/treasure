@@ -7,17 +7,21 @@
 </template>
 
 <script>
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import { useStore } from "vuex";
 export default defineComponent({
   name: "play-btn",
   setup() {
+    // data
+    const songReady = ref(true);
     // vuex
     const store = useStore();
+    const playlist = computed(() => store.state.playlist);
+    const currentIndex = computed(() => store.state.currentIndex);
     const playingState = computed(() => {
       return {
         state: store.state.playing,
-        icon: store.state.playing ? "icon-play-fill" : "icon-pause-fill",
+        icon: store.state.playing ? "icon-pause-fill" : "icon-play-fill",
       };
     });
 
@@ -27,6 +31,21 @@ export default defineComponent({
     };
     const nextSong = () => {
       console.log("下一首");
+      const list = playlist.value;
+      if (!songReady.value || !list.length) {
+        return;
+      }
+
+      if (list.length === 1) {
+        // loop()
+      } else {
+        let index = currentIndex.value + 1;
+        if (index === list.length) {
+          index = 0;
+        }
+        console.log("index: ", index);
+        store.commit("setCurrentIndex", index);
+      }
     };
     const togglePlayStatus = () => {
       console.log("播放/暂停");

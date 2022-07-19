@@ -1,14 +1,5 @@
 <template>
   <div class="audio-test">
-    <h1></h1>
-    <h1></h1>
-    <h1></h1>
-    <h1></h1>
-    <h1></h1>
-    <h1></h1>
-    <h1></h1>
-    <h1></h1>
-    <h1></h1>
     <a-button type="primary" size="small" @click="play">播放</a-button>
   </div>
 </template>

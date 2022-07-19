@@ -48,7 +48,6 @@ export default defineComponent({
 
 <style lang="less" >
 .play-list-drawer {
-  z-index: 3;
 }
 </style>
 

@@ -11,7 +11,7 @@
     >
     </a-drawer>
     <div class="album-cover" @click="toggleFullScreen">
-      <img src="../../assets/images/album_cover.webp" alt="" />
+      <img src="../../assets/images/album_cover.webp" alt="album" />
       <div class="expand-status-icon">
         <i
           :class="fullScreen ? 'icon-direction-down' : 'icon-direction-up'"
@@ -48,6 +48,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .play-detail {
   .player-detail-drawer {
+    background: pink;
   }
   .album-cover {
     height: 40px;
