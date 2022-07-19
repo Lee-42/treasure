@@ -8,13 +8,17 @@
       @drag-end="progressDragEnd"
       @change="progressChange"
     ></vue-slider>
-    <PlayDetail />
-    <PlayBtn />
-    <div class="player-tool">
+    <div class="play-detail-wrapper">
+      <PlayDetail />
+    </div>
+    <div class="player-btn-wrapper">
+      <PlayBtn />
+    </div>
+    <div class="play-tool-wrapper">
       <PlayMode />
       <PlayList />
       <span>词</span>
-      <Volume @volumeChange="handleVolumeChange" />
+      <PlayVolume @volumeChange="handleVolumeChange" />
     </div>
   </div>
 </template>
@@ -26,7 +30,7 @@ import PlayDetail from "./PlayerDetail";
 import PlayBtn from "./PlayBtn.vue";
 import PlayMode from "./PlayMode.vue";
 import PlayList from "./PlayList.vue";
-import Volume from "./Volume";
+import PlayVolume from "./PlayVolume";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
 import { Howl, Howler } from "howler";
@@ -37,12 +41,12 @@ export default defineComponent({
     PlayBtn,
     PlayMode,
     PlayList,
-    Volume,
+    PlayVolume,
     VueSlider,
   },
   setup() {
     // data
-    const progress = ref(28);
+    const progress = ref(0);
     let audio = null;
     // vuex
     const store = useStore();
@@ -65,9 +69,11 @@ export default defineComponent({
       setTimeout(() => {
         audio.play();
       });
+      setInterval(() => {
+        progress.value = (audio.seek() / audio.duration()) * 100;
+      }, 1000);
     });
     watch(playingState, (isPlaying) => {
-      console.log("playingState: ", isPlaying);
       if (isPlaying) {
         audio && audio.play();
       } else {
@@ -83,16 +89,18 @@ export default defineComponent({
       console.log("progressDragging: ", e);
     };
 
-    const progressDragEnd = (e) => {
-      console.log("progressDragEnd: ", e);
-    };
+    const progressDragEnd = (e) => {};
 
     const progressChange = (e) => {
-      console.log("progressChange: ", e);
+      console.log(
+        "audio.duration() * (e / 100): ",
+        audio.duration() * (e / 100)
+      );
+      audio.seek(audio.duration() * (e / 100));
     };
 
     const handleVolumeChange = (e) => {
-      console.log("handleVolumeChange: ", e);
+      Howler.volume(e / 100);
     };
 
     return {
@@ -114,6 +122,7 @@ export default defineComponent({
   padding: 10px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   position: relative;
 
   //进度条
@@ -133,6 +142,7 @@ export default defineComponent({
         display: flex;
         align-items: center;
         justify-content: center;
+        visibility: hidden;
         .vue-slider-dot-handle {
           height: 12px;
           width: 12px;
@@ -143,14 +153,27 @@ export default defineComponent({
   }
   :deep(.vue-slider):hover {
     .vue-slider-dot {
-      display: inline-block;
+      visibility: visible;
     }
   }
-  .player-tool {
+  .play-detail-wrapper {
+    width: 33%;
+    height: 100%;
+    float: left;
+  }
+  .player-btn-wrapper {
+    width: 33%;
+    height: 100%;
     display: flex;
     align-items: center;
-    position: absolute;
-    right: 0;
+    justify-content: center;
+  }
+  .play-tool-wrapper {
+    width: 33%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     i {
       color: rgb(176, 176, 176);
       font-size: 18px;

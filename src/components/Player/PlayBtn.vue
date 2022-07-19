@@ -1,8 +1,8 @@
 <template>
   <div class="play-btn">
-    <i class="icon-iov-pre" @click="preSone"></i>
+    <i class="icon-iov-pre" @click="pre"></i>
     <i :class="playingState.icon" @click="togglePlayStatus"></i>
-    <i class="icon-iov-next" @click="nextSong"></i>
+    <i class="icon-iov-next" @click="next"></i>
   </div>
 </template>
 
@@ -26,11 +26,7 @@ export default defineComponent({
     });
 
     // methods
-    const preSone = () => {
-      console.log("上一首");
-    };
-    const nextSong = () => {
-      console.log("下一首");
+    const pre = () => {
       const list = playlist.value;
       if (!songReady.value || !list.length) {
         return;
@@ -39,11 +35,25 @@ export default defineComponent({
       if (list.length === 1) {
         // loop()
       } else {
+        let index = currentIndex.value - 1;
+        if (index === -1) {
+          index = list.length - 1;
+        }
+        store.commit("setCurrentIndex", index);
+      }
+    };
+    const next = () => {
+      const list = playlist.value;
+      if (!songReady.value || !list.length) {
+        return;
+      }
+      if (list.length === 1) {
+        // loop()
+      } else {
         let index = currentIndex.value + 1;
         if (index === list.length) {
           index = 0;
         }
-        console.log("index: ", index);
         store.commit("setCurrentIndex", index);
       }
     };
@@ -54,8 +64,8 @@ export default defineComponent({
 
     return {
       playingState,
-      preSone,
-      nextSong,
+      pre,
+      next,
       togglePlayStatus,
     };
   },

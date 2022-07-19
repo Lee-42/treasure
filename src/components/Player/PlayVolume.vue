@@ -1,10 +1,15 @@
 <template>
-  <div class="volume">
-    <div class="slider-wrapper">
+  <div
+    class="volume"
+    @mouseenter="() => (showVolume = true)"
+    @mouseleave="hide"
+  >
+    <div class="slider-wrapper" v-if="showVolume">
       <vue-slider
         class="volume-slider"
         v-model="volume"
         direction="btt"
+        @drag-end="handleDragEnd"
         @change="handleChange"
       ></vue-slider>
     </div>
@@ -17,7 +22,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import VueSlider from "vue-slider-component";
 
 import "vue-slider-component/theme/default.css";
@@ -29,9 +34,21 @@ export default {
   emits: ["volumeChange"],
   setup(props, { emit }) {
     const volume = ref(0);
+    const showVolume = ref(false);
+    const canHideVolume = ref(true);
     const handleChange = (e) => {
       volume.value = e;
       emit("volumeChange", e);
+      canHideVolume.value = false;
+    };
+    const handleDragEnd = () => {
+      canHideVolume.value = true;
+    };
+
+    const hide = () => {
+      if (canHideVolume.value) {
+        showVolume.value = false;
+      }
     };
 
     const muteOrDefault = () => {
@@ -44,8 +61,11 @@ export default {
     };
     return {
       volume,
+      showVolume,
       handleChange,
+      handleDragEnd,
       muteOrDefault,
+      hide,
     };
   },
 };
@@ -63,7 +83,7 @@ export default {
     bottom: 55px;
     align-items: center;
     justify-content: center;
-    display: none;
+    display: flex;
     :deep(.volume-slider) {
       height: 100% !important;
       border-radius: 5px;
@@ -80,11 +100,6 @@ export default {
       color: rgb(176, 176, 176);
       font-size: 18px;
     }
-  }
-}
-.volume:hover {
-  .slider-wrapper {
-    display: flex;
   }
 }
 </style>
