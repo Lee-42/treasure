@@ -32,7 +32,7 @@ export default {
   background: @primary-color;
   display: flex;
   width: 135px;
-  border-radius: 15px;
+  border-radius: 4px;
   color: #eeeeee;
   cursor: pointer;
   .play {

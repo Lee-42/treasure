@@ -29,6 +29,12 @@ const routers = [
     label: "本地音乐",
   },
   {
+    path: "/album",
+    name: "Album",
+    icon: "icon-zuijinchangyong",
+    label: "专辑",
+  },
+  {
     path: "/recentlyPlayed",
     name: "RecentlyPlayed",
     icon: "icon-zuijinchangyong",

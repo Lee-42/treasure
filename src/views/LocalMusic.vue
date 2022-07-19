@@ -22,6 +22,20 @@
             @play-all="handlePlayAll"
             @add-to-play-list="handleAddToPlayList"
           ></PlayListBtn>
+          <a-dropdown-button
+            :trigger="['click']"
+            class="local-music-path-dropdown"
+          >
+            {{ defaultLocalMusicPath }}
+            <template #overlay>
+              <a-menu @click="handleMenuClick">
+                <a-menu-item v-for="p in localMusicPath" :key="p.index">
+                  {{ p.path }}
+                </a-menu-item>
+              </a-menu>
+            </template>
+            <template #icon><i class="icon-financial_hard_disk"></i></template>
+          </a-dropdown-button>
           <div class="add-local-music" @click="addLocalMusic">添加</div>
         </div>
       </template>
@@ -29,14 +43,16 @@
   </div>
 </template>
 <script>
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, onActivated } from "vue";
 import PlayListBtn from "../components/Base/PlayListBtn";
-import { showOpenDialog, isAudio, getMusicMetaDataCommon } from "../utils";
+import {
+  showOpenDialog,
+  isAudio,
+  getMusicMetaDataCommon,
+  fileTraversal,
+} from "../utils";
 import { db } from "../db/index.js";
 import { useStore } from "vuex";
-import fs from "fs";
-import path from "path";
-import { Howl } from "howler";
 
 const music_columns = [
   {
@@ -81,12 +97,24 @@ export default defineComponent({
     // data
     let data = ref([]);
     let columns = ref(music_columns);
-
+    let defaultLocalMusicPath = ref("暂无本地音乐目录");
+    let localMusicPath = ref([]);
     // vuex
     const store = useStore();
     onMounted(() => {
       loadLocalMosic();
+      getLocalMusicPath();
     });
+
+    const getLocalMusicPath = async () => {
+      try {
+        localMusicPath.value = await db.local_music_path.toArray();
+        localMusicPath.value[0] &&
+          (defaultLocalMusicPath.value = localMusicPath.value[0].path);
+      } catch (err) {
+        console.log("获取本地音乐文件夹失败: ", err);
+      }
+    };
     /**
      * 加载本地音乐
      */
@@ -95,41 +123,48 @@ export default defineComponent({
         data.value.push(song);
       });
     };
+
     /**
      * 添加本地音乐
      */
-    const addLocalMusic = async (filePath) => {
-      if (typeof filePath !== "string") {
-        let res = await showOpenDialog({
-          title: "添加本地音乐",
-          properties: ["openDirectory"],
-        });
-        if (!res.canceled && res.filePaths.length > 0) {
-          filePath = res.filePaths[0];
-        }
+    const addLocalMusic = async () => {
+      let filePath;
+      let res = await showOpenDialog({
+        title: "添加本地音乐",
+        properties: ["openDirectory"],
+      });
+      if (!res.canceled && res.filePaths.length > 0) {
+        filePath = res.filePaths[0];
       }
-      let files = await fs.readdirSync(filePath);
-      let num = 0;
-      files.map(async (f, i) => {
-        let audio = isAudio(f);
-        if (audio.isAudio) {
-          let mdCommon = await getMusicMetaDataCommon(path.join(filePath, f));
-          num++;
-          let song = {
-            num: num,
-            title: (mdCommon.title || f).split("." + audio.suffix)[0],
-            album: mdCommon.album || "未知",
-            artist: mdCommon.artist || "未知",
-            genre: mdCommon.genre || "未知",
-            url: path.join(filePath, f),
-          };
-          try {
-            await db.local_music.add(song);
-          } catch (err) {
-            console.log("添加本地歌曲失败: ", err);
+      let exits = await db.local_music_path
+        .where("path")
+        .equalsIgnoreCase(filePath)
+        .toArray();
+      if (exits.length <= 0) {
+        await db.local_music_path.add({
+          path: filePath,
+        });
+        let files = await fileTraversal(filePath);
+        let arr = [];
+        for (let f of files) {
+          if (isAudio(f).isAudio) {
+            let musicMD = await getMusicMetaDataCommon(f);
+            arr.push({
+              title: musicMD.title || "未知",
+              album: musicMD.album || "未知",
+              artist: musicMD.artist || "未知",
+              genre: musicMD.genre || "未知",
+              url: f,
+            });
           }
         }
-      });
+        console.log(arr);
+        try {
+          await db.local_music.bulkAdd(arr);
+        } catch (err) {
+          console.log(err);
+        }
+      }
     };
 
     /**
@@ -157,8 +192,12 @@ export default defineComponent({
       console.log("添加到播放列表");
     };
 
+    const handleMenuClick = () => {};
+
     return {
       data,
+      defaultLocalMusicPath,
+      localMusicPath,
       columns,
       addLocalMusic,
       handleResizeColumn: (w, col) => {
@@ -167,6 +206,7 @@ export default defineComponent({
       handlePlayAll,
       handleAddToPlayList,
       customRow,
+      handleMenuClick,
     };
   },
 });
@@ -185,10 +225,23 @@ export default defineComponent({
           display: flex;
           align-items: center;
 
+          .local-music-path-dropdown {
+            button {
+              background: @primary-color;
+              color: white;
+              border: none;
+            }
+            button:first-child {
+              border-radius: 4px 0 0 4px;
+            }
+            .ant-dropdown-trigger {
+              border-radius: 0px 4px 4px 0px;
+            }
+          }
           .add-local-music {
-            width: 100px;
+            width: 80px;
             height: 30px;
-            border-radius: 15px;
+            border-radius: 4px;
             color: white;
             text-align: center;
             line-height: 30px;

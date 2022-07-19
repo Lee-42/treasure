@@ -6,9 +6,23 @@
     </div>
     <div id="treasure-body" class="body">
       <SideBar></SideBar>
-      <router-view id="view" class="view" />
+      <!-- <router-view id="view" class="view"></router-view> -->
+      <router-view id="view" class="view" v-slot="{ Component }">
+        <keep-alive>
+          <component
+            :is="Component"
+            v-if="$route.meta.keepAlive"
+            :key="$route.name"
+          ></component>
+        </keep-alive>
+        <component
+          :is="Component"
+          v-if="!$route.meta.keepAlive"
+          :key="$route.name"
+        ></component>
+      </router-view>
     </div>
-    <Player></Player>
+    <Player />
   </div>
 </template>
 

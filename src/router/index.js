@@ -6,12 +6,27 @@ const routes = [
     path: "/",
     name: "LocalMusic",
     component: LocalMusic,
+    meta: {
+      keepAlive: false,
+    },
+  },
+  {
+    path: "/album",
+    name: "Album",
+    component: () =>
+      import(/* webpackChunkName: "album" */ "../views/Album.vue"),
+    meta: {
+      keepAlive: true,
+    },
   },
   {
     path: "/recentlyPlayed",
     name: "RecentlyPlayed",
     component: () =>
       import(/* webpackChunkName: "discover" */ "../views/RecentlyPlayed.vue"),
+    meta: {
+      keepAlive: true,
+    },
   },
   {
     path: "/discover",

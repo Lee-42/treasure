@@ -1,21 +1,20 @@
 const mm = require("music-metadata");
-const util = require("util");
 const path = require("path");
-(async () => {
-  try {
-    const metadata = await mm.parseFile(
-      path.join(__dirname, "./陶喆 - 心乱飞.mp3")
-    );
-    console.log(util.inspect(metadata, { showHidden: false, depth: null }));
-  } catch (error) {
-    console.error(error.message);
-  }
-})();
+/**
+ * 获取音频文件的信息
+ * @param {String} filePath
+ * @returns
+ */
+const getMusicMetaDataCommon = async (filePath) => {
+  let md = await mm.parseFile(filePath);
+  return md.common;
+};
 
-async function getMusicMetaDataCommon(path) {
-  return await (
-    await mm.parseFile(path)
-  ).common;
-}
+// (async () => {
+//   let r = await getMusicMetaDataCommon(
+//     path.join(__dirname, "../../public/陶喆 - 心乱飞.mp3")
+//   );
+//   console.log(r);
+// })();
 
 export { getMusicMetaDataCommon };

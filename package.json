@@ -29,6 +29,7 @@
   "dependencies": {
     "ant-design-vue": "^3.0.0-alpha.16",
     "axios": "^0.27.2",
+    "chokidar": "^3.5.3",
     "core-js": "^3.6.5",
     "dexie": "^3.2.2",
     "express": "^4.18.1",

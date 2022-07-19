@@ -8,7 +8,16 @@ import loadingDirective from "@/components/Base/Loading/directive";
 import tooltipDirective from "@/components/Base/ToolTip/directive";
 
 // ant-design-vue
-import { Button, Input, Table, Switch, Drawer, Tooltip } from "ant-design-vue";
+import {
+  Button,
+  Input,
+  Table,
+  Switch,
+  Drawer,
+  Tooltip,
+  Dropdown,
+  Menu,
+} from "ant-design-vue";
 // 引入全局样式文件
 // import "@/assets/less/index.less";
 const app = createApp(App);
@@ -19,6 +28,8 @@ app.use(Table);
 app.use(Switch);
 app.use(Drawer);
 app.use(Tooltip);
+app.use(Dropdown);
+app.use(Menu);
 
 // 注册指令
 app.directive("loading", loadingDirective);
