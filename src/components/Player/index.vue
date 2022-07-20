@@ -1,20 +1,22 @@
 <template>
   <div class="player">
-    <vue-slider
-      class="progress-slider"
-      v-model="progress"
-      @drag-start="progressDragStart"
-      @dragging="progressDragging"
-      @drag-end="progressDragEnd"
-      @change="progressChange"
-    ></vue-slider>
-    <div class="play-detail-wrapper">
+    <div class="player-progress">
+      <vue-slider
+        v-model="progress"
+        tooltip="none"
+        @drag-start="progressDragStart"
+        @dragging="progressDragging"
+        @drag-end="progressDragEnd"
+        @change="progressChange"
+      ></vue-slider>
+    </div>
+    <div class="player-detail-wrapper">
       <PlayDetail />
     </div>
     <div class="player-btn-wrapper">
       <PlayBtn />
     </div>
-    <div class="play-tool-wrapper">
+    <div class="player-tool-wrapper">
       <PlayMode />
       <PlayList />
       <span>词</span>
@@ -65,6 +67,9 @@ export default defineComponent({
           ),
         ],
         html5: true,
+        onend: () => {
+          console.log("播放完毕");
+        },
       });
       setTimeout(() => {
         audio.play();
@@ -92,10 +97,6 @@ export default defineComponent({
     const progressDragEnd = (e) => {};
 
     const progressChange = (e) => {
-      console.log(
-        "audio.duration() * (e / 100): ",
-        audio.duration() * (e / 100)
-      );
       audio.seek(audio.duration() * (e / 100));
     };
 
@@ -126,37 +127,39 @@ export default defineComponent({
   position: relative;
 
   //进度条
-  :deep(.progress-slider) {
+  .player-progress {
     position: absolute;
     top: -7px;
     left: 0px;
     right: 0px;
-    height: 2px !important;
+    padding-right: 6px;
 
-    .vue-slider-rail {
-      background: transparent !important;
-      .vue-slider-process {
-        background: @primary-color !important;
-      }
-      .vue-slider-dot {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        visibility: hidden;
-        .vue-slider-dot-handle {
-          height: 12px;
-          width: 12px;
-          background: @primary-color !important;
+    :deep(.vue-slider) {
+      max-height: 2px;
+      .vue-slider-rail {
+        background: transparent;
+        padding-right: 6px;
+        .vue-slider-process {
+          background: @primary-color;
+        }
+
+        .vue-slider-dot {
+          max-width: 12px;
+          max-height: 12px;
+          visibility: hidden;
+          .vue-slider-dot-handle {
+            background: @primary-color;
+          }
         }
       }
     }
-  }
-  :deep(.vue-slider):hover {
-    .vue-slider-dot {
-      visibility: visible;
+    :deep(.vue-slider):hover {
+      .vue-slider-dot {
+        visibility: visible;
+      }
     }
   }
-  .play-detail-wrapper {
+  .player-detail-wrapper {
     width: 33%;
     height: 100%;
     float: left;
@@ -168,7 +171,7 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
   }
-  .play-tool-wrapper {
+  .player-tool-wrapper {
     width: 33%;
     height: 100%;
     display: flex;
