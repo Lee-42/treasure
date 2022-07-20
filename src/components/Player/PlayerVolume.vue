@@ -7,8 +7,9 @@
     <div class="slider-wrapper" v-if="showVolume">
       <vue-slider
         class="volume-slider"
-        v-model="volume"
+        v-model="vol"
         direction="btt"
+        @drag-start="handleDragStart"
         @drag-end="handleDragEnd"
         @change="handleChange"
       ></vue-slider>
@@ -22,7 +23,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { computed, ref } from "vue";
 import VueSlider from "vue-slider-component";
 
 import "vue-slider-component/theme/default.css";
@@ -33,15 +34,23 @@ export default {
   },
   emits: ["volumeChange"],
   setup(props, { emit }) {
-    const volume = ref(0);
+    let vol = computed(() => props.volume);
+    let newVol = 0;
+    let dragging = false;
     const showVolume = ref(false);
     const canHideVolume = ref(true);
+
+    const handleDragStart = () => (dragging = true);
     const handleChange = (e) => {
-      volume.value = e;
-      emit("volumeChange", e);
+      if (dragging) {
+        newVol = e;
+      } else {
+        emit("volumeChange", e);
+      }
       canHideVolume.value = false;
     };
     const handleDragEnd = () => {
+      dragging = false;
       canHideVolume.value = true;
     };
 
@@ -52,16 +61,17 @@ export default {
     };
 
     const muteOrDefault = () => {
-      if (volume.value == 0) {
-        volume.value = 50;
+      if (newVol == 0) {
+        newVol = 50;
       } else {
-        volume.value = 0;
+        newVol = 0;
       }
-      emit("volumeChange", volume.value);
+      emit("volumeChange", newVol);
     };
     return {
-      volume,
+      vol,
       showVolume,
+      handleDragStart,
       handleChange,
       handleDragEnd,
       muteOrDefault,

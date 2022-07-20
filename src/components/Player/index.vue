@@ -1,26 +1,22 @@
 <template>
   <div class="player">
-    <div class="player-progress">
-      <vue-slider
-        v-model="progress"
-        tooltip="none"
-        @drag-start="progressDragStart"
-        @dragging="progressDragging"
-        @drag-end="progressDragEnd"
-        @change="progressChange"
-      ></vue-slider>
+    <div class="player-progress-wrapper">
+      <PlayerProgress
+        :progress="progress"
+        @progressChange="handleProgressChange"
+      />
     </div>
     <div class="player-detail-wrapper">
       <PlayDetail />
     </div>
-    <div class="player-btn-wrapper">
-      <PlayBtn />
+    <div class="player-opra-wrapper">
+      <PlayerOpra />
     </div>
     <div class="player-tool-wrapper">
-      <PlayMode />
-      <PlayList />
+      <PlayerMode />
+      <PlayerList />
       <span>词</span>
-      <PlayVolume @volumeChange="handleVolumeChange" />
+      <PlayerVolume :volume="volume" />
     </div>
   </div>
 </template>
@@ -28,28 +24,29 @@
 <script>
 import { computed, defineComponent, ref, watch } from "vue";
 import { useStore } from "vuex";
+import PlayerProgress from "./PlayerProgress.vue";
 import PlayDetail from "./PlayerDetail";
-import PlayBtn from "./PlayBtn.vue";
-import PlayMode from "./PlayMode.vue";
-import PlayList from "./PlayList.vue";
-import PlayVolume from "./PlayVolume";
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/default.css";
+import PlayerOpra from "./PlayerOpra.vue";
+import PlayerMode from "./PlayerMode.vue";
+import PlayerList from "./PlayerList.vue";
+import PlayerVolume from "./PlayerVolume";
 import { Howl, Howler } from "howler";
 
 export default defineComponent({
+  name: "player",
   components: {
+    PlayerProgress,
     PlayDetail,
-    PlayBtn,
-    PlayMode,
-    PlayList,
-    PlayVolume,
-    VueSlider,
+    PlayerOpra,
+    PlayerMode,
+    PlayerList,
+    PlayerVolume,
   },
   setup() {
     // data
-    const progress = ref(0);
-    let audio = null;
+    let progress = ref(0);
+    let volume = ref(0);
+    let audio;
     // vuex
     const store = useStore();
     const currentSong = computed(() => store.getters.currentSong);
@@ -77,6 +74,7 @@ export default defineComponent({
       setInterval(() => {
         progress.value = (audio.seek() / audio.duration()) * 100;
       }, 1000);
+      volume.value = audio.volume();
     });
     watch(playingState, (isPlaying) => {
       if (isPlaying) {
@@ -86,18 +84,8 @@ export default defineComponent({
       }
     });
 
-    const progressDragStart = (e) => {
-      console.log("progressDragStart: ", e);
-    };
-
-    const progressDragging = (e) => {
-      console.log("progressDragging: ", e);
-    };
-
-    const progressDragEnd = (e) => {};
-
-    const progressChange = (e) => {
-      audio.seek(audio.duration() * (e / 100));
+    const handleProgressChange = (p) => {
+      audio.seek((p / 100) * audio.duration());
     };
 
     const handleVolumeChange = (e) => {
@@ -106,11 +94,9 @@ export default defineComponent({
 
     return {
       progress,
-      progressDragStart,
-      progressDragging,
-      progressDragEnd,
-      progressChange,
+      volume,
       handleVolumeChange,
+      handleProgressChange,
     };
   },
 });
@@ -126,45 +112,20 @@ export default defineComponent({
   justify-content: space-between;
   position: relative;
 
-  //进度条
-  .player-progress {
+  .player-progress-wrapper {
     position: absolute;
     top: -7px;
     left: 0px;
     right: 0px;
     padding-right: 6px;
-
-    :deep(.vue-slider) {
-      max-height: 2px;
-      .vue-slider-rail {
-        background: transparent;
-        padding-right: 6px;
-        .vue-slider-process {
-          background: @primary-color;
-        }
-
-        .vue-slider-dot {
-          max-width: 12px;
-          max-height: 12px;
-          visibility: hidden;
-          .vue-slider-dot-handle {
-            background: @primary-color;
-          }
-        }
-      }
-    }
-    :deep(.vue-slider):hover {
-      .vue-slider-dot {
-        visibility: visible;
-      }
-    }
   }
+
   .player-detail-wrapper {
     width: 33%;
     height: 100%;
     float: left;
   }
-  .player-btn-wrapper {
+  .player-opra-wrapper {
     width: 33%;
     height: 100%;
     display: flex;

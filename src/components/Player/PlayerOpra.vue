@@ -1,5 +1,5 @@
 <template>
-  <div class="play-btn">
+  <div class="player-opra">
     <i class="icon-iov-pre" @click="pre"></i>
     <i :class="playingState.icon" @click="togglePlayStatus"></i>
     <i class="icon-iov-next" @click="next"></i>
@@ -10,7 +10,7 @@
 import { defineComponent, computed, ref } from "vue";
 import { useStore } from "vuex";
 export default defineComponent({
-  name: "play-btn",
+  name: "player-opra",
   setup() {
     // data
     const songReady = ref(true);
@@ -73,7 +73,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.play-btn {
+.player-opra {
   display: flex;
   align-items: center;
   margin: 0 auto;

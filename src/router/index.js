@@ -29,6 +29,15 @@ const routes = [
     },
   },
   {
+    path: "/tinyView",
+    name: "TinyView",
+    component: () =>
+      import(/* webpackChunkName: "tinyView" */ "../views/TinyView.vue"),
+    meta: {
+      keepAlive: false,
+    },
+  },
+  {
     path: "/discover",
     name: "Discover",
     // route level code-splitting
