@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { watch, defineComponent, ref, computed } from "vue";
+import { defineComponent, computed } from "vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
 

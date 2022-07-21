@@ -37,6 +37,9 @@
             <template #icon><i class="icon-financial_hard_disk"></i></template>
           </a-dropdown-button>
           <div class="add-local-music" @click="addLocalMusic">添加</div>
+          <div class="add-local-music" @click="togglePlay">
+            {{ playing ? "暂停" : "播放" }}
+          </div>
         </div>
       </template>
     </a-table>
@@ -53,6 +56,8 @@ import {
 } from "../utils";
 import { db } from "../db/index.js";
 import { useStore } from "vuex";
+
+import usePlayer from "../components/Player/usePlayer.js";
 
 const music_columns = [
   {
@@ -194,7 +199,17 @@ export default defineComponent({
 
     const handleMenuClick = () => {};
 
+    const { playing, handlePlay, handlePause } = usePlayer();
+    const togglePlay = () => {
+      if (playing.value) {
+        handlePause();
+      } else {
+        handlePlay();
+      }
+    };
+
     return {
+      playing,
       data,
       defaultLocalMusicPath,
       localMusicPath,
@@ -207,6 +222,7 @@ export default defineComponent({
       handleAddToPlayList,
       customRow,
       handleMenuClick,
+      togglePlay,
     };
   },
 });

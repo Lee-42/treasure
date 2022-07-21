@@ -7,61 +7,32 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref } from "vue";
-import { useStore } from "vuex";
+import { defineComponent, computed } from "vue";
 export default defineComponent({
   name: "player-opra",
-  setup() {
+  props: {
+    playing: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  emits: ["prev", "next", "play", "pause"],
+  setup(props, { emit }) {
     // data
-    const songReady = ref(true);
-    // vuex
-    const store = useStore();
-    const playlist = computed(() => store.state.playlist);
-    const currentIndex = computed(() => store.state.currentIndex);
-    const playingState = computed(() => {
+    let playingState = computed(() => {
       return {
-        state: store.state.playing,
-        icon: store.state.playing ? "icon-pause-fill" : "icon-play-fill",
+        state: props.playing,
+        icon: props.playing ? "icon-pause-fill" : "icon-play-fill",
       };
     });
-
     // methods
-    const pre = () => {
-      const list = playlist.value;
-      if (!songReady.value || !list.length) {
-        return;
-      }
-
-      if (list.length === 1) {
-        // loop()
-      } else {
-        let index = currentIndex.value - 1;
-        if (index === -1) {
-          index = list.length - 1;
-        }
-        store.commit("setCurrentIndex", index);
-      }
-    };
-    const next = () => {
-      const list = playlist.value;
-      if (!songReady.value || !list.length) {
-        return;
-      }
-      if (list.length === 1) {
-        // loop()
-      } else {
-        let index = currentIndex.value + 1;
-        if (index === list.length) {
-          index = 0;
-        }
-        store.commit("setCurrentIndex", index);
-      }
-    };
+    const pre = () => emit("prev");
+    const next = () => emit("next");
     const togglePlayStatus = () => {
       console.log("播放/暂停");
-      store.commit("setPlayingState", !playingState.value.state);
+      console.log("playingState: ", playingState.value);
+      playingState.value.state ? emit("pause") : emit("play");
     };
-
     return {
       playingState,
       pre,

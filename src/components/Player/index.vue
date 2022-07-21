@@ -10,27 +10,32 @@
       <PlayDetail />
     </div>
     <div class="player-opra-wrapper">
-      <PlayerOpra />
+      <PlayerOpra
+        :playing="playing"
+        @play="handlePlay"
+        @pause="handlePause"
+        @prev="handlePrev"
+        @next="handleNext"
+      />
     </div>
     <div class="player-tool-wrapper">
       <PlayerMode />
       <PlayerList />
       <span>词</span>
-      <PlayerVolume :volume="volume" />
+      <PlayerVolume :volume="volume" @volumeChange="handleVolumeChange" />
     </div>
   </div>
 </template>
 
 <script>
-import { computed, defineComponent, ref, watch } from "vue";
-import { useStore } from "vuex";
 import PlayerProgress from "./PlayerProgress.vue";
 import PlayDetail from "./PlayerDetail";
 import PlayerOpra from "./PlayerOpra.vue";
 import PlayerMode from "./PlayerMode.vue";
 import PlayerList from "./PlayerList.vue";
 import PlayerVolume from "./PlayerVolume";
-import { Howl, Howler } from "howler";
+import { defineComponent } from "vue";
+import usePlayer from "./usePlayer.js";
 
 export default defineComponent({
   name: "player",
@@ -43,60 +48,30 @@ export default defineComponent({
     PlayerVolume,
   },
   setup() {
-    // data
-    let progress = ref(0);
-    let volume = ref(0);
-    let audio;
-    // vuex
-    const store = useStore();
-    const currentSong = computed(() => store.getters.currentSong);
-    const playingState = computed(() => store.state.playing);
-    watch(currentSong, (newSong) => {
-      if (!newSong.id || !newSong.url) {
-        return;
-      }
-      console.log("currentSong: ", currentSong.value);
-      Howler.unload();
-      audio = new Howl({
-        src: [
-          decodeURIComponent(
-            `http://localhost:6789/audio?audio_path=${newSong.url}`
-          ),
-        ],
-        html5: true,
-        onend: () => {
-          console.log("播放完毕");
-        },
-      });
-      setTimeout(() => {
-        audio.play();
-      });
-      setInterval(() => {
-        progress.value = (audio.seek() / audio.duration()) * 100;
-      }, 1000);
-      volume.value = audio.volume();
-    });
-    watch(playingState, (isPlaying) => {
-      if (isPlaying) {
-        audio && audio.play();
-      } else {
-        audio.pause();
-      }
-    });
-
-    const handleProgressChange = (p) => {
-      audio.seek((p / 100) * audio.duration());
-    };
-
-    const handleVolumeChange = (e) => {
-      Howler.volume(e / 100);
-    };
-
-    return {
+    let {
+      playing,
       progress,
       volume,
-      handleVolumeChange,
+      handleLoad,
+      handlePlay,
+      handlePause,
+      handlePrev,
+      handleNext,
       handleProgressChange,
+      handleVolumeChange,
+    } = usePlayer();
+    handleLoad();
+    return {
+      playing,
+      progress,
+      volume,
+      handleLoad,
+      handlePlay,
+      handlePause,
+      handlePrev,
+      handleNext,
+      handleProgressChange,
+      handleVolumeChange,
     };
   },
 });

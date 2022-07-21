@@ -38,24 +38,24 @@ export default {
     let newVol = 0;
     let dragging = false;
     const showVolume = ref(false);
-    const canHideVolume = ref(true);
 
-    const handleDragStart = () => (dragging = true);
+    const handleDragStart = () => {
+      dragging = true;
+    };
     const handleChange = (e) => {
       if (dragging) {
         newVol = e;
       } else {
         emit("volumeChange", e);
       }
-      canHideVolume.value = false;
     };
     const handleDragEnd = () => {
       dragging = false;
-      canHideVolume.value = true;
+      emit("volumeChange", newVol);
     };
 
     const hide = () => {
-      if (canHideVolume.value) {
+      if (dragging) {
         showVolume.value = false;
       }
     };
