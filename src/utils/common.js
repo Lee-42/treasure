@@ -97,4 +97,24 @@ const fileTraversal = async (filePath) => {
   return fileArr;
 };
 
-export { showOpenDialog, isAudio, fileTraversal };
+/**
+ * 将秒数转成 00:00 的格式
+ * @param {Number} num
+ */
+const parseProgressDuration = (num) => {
+  console.log("num: ", num);
+  num = num.toFixed();
+  let min = num / 60 - 1;
+  let sec = num % 60;
+  const padZero = (n) => {
+    n = n.toFixed();
+    if (n < 0) {
+      return `0${n}`;
+    } else {
+      return `${n}`;
+    }
+  };
+  return `${padZero(min)}:${padZero(sec)}`;
+};
+
+export { showOpenDialog, isAudio, fileTraversal, parseProgressDuration };

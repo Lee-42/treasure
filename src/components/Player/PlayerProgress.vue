@@ -1,5 +1,5 @@
 <template>
-  <div class="player-progress">
+  <div class="player-progress" v-show="pgs > 0 && pgs < 100">
     <vue-slider
       tooltip="none"
       v-model="pgs"

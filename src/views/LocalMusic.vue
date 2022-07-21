@@ -22,7 +22,7 @@
             @play-all="handlePlayAll"
             @add-to-play-list="handleAddToPlayList"
           ></PlayListBtn>
-          <a-dropdown-button
+          <!-- <a-dropdown-button
             :trigger="['click']"
             class="local-music-path-dropdown"
           >
@@ -35,18 +35,19 @@
               </a-menu>
             </template>
             <template #icon><i class="icon-financial_hard_disk"></i></template>
-          </a-dropdown-button>
+          </a-dropdown-button> -->
           <div class="add-local-music" @click="addLocalMusic">添加</div>
           <div class="add-local-music" @click="togglePlay">
             {{ playing ? "暂停" : "播放" }}
           </div>
+          音量 {{ volume }} 进度 {{ progress }}
         </div>
       </template>
     </a-table>
   </div>
 </template>
 <script>
-import { defineComponent, onMounted, ref, onActivated } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import PlayListBtn from "../components/Base/PlayListBtn";
 import {
   showOpenDialog,
@@ -199,7 +200,7 @@ export default defineComponent({
 
     const handleMenuClick = () => {};
 
-    const { playing, handlePlay, handlePause } = usePlayer();
+    const { playing, volume, progress, handlePlay, handlePause } = usePlayer();
     const togglePlay = () => {
       if (playing.value) {
         handlePause();
@@ -210,6 +211,8 @@ export default defineComponent({
 
     return {
       playing,
+      volume,
+      progress,
       data,
       defaultLocalMusicPath,
       localMusicPath,

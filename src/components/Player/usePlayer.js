@@ -4,17 +4,18 @@ import { Howl, Howler } from "howler";
 
 export default function usePlayer() {
   // data
-  let progress = ref(0);
-  let volume = ref(0);
   let audio;
+  let progressTimer;
   // vuex
   const store = useStore();
   const currentSong = computed(() => store.getters.currentSong);
   const playing = computed(() => store.state.playing);
+  const volume = computed(() => store.state.volume);
+  const progress = computed(() => store.state.progress);
+  const duration = computed(() => store.state.duration);
   const playlist = computed(() => store.state.playlist);
   const currentIndex = computed(() => store.state.currentIndex);
   const songReady = ref(true);
-
   watch(playing, (isPlaying) => {
     if (isPlaying) {
       audio && audio.play();
@@ -22,32 +23,49 @@ export default function usePlayer() {
       audio && audio.pause();
     }
   });
+  watch(volume, (v) => {
+    Howler.volume(v / 100);
+  });
 
+  /**
+   * 加载音乐, 这个方法全局只调用一次
+   */
   const handleLoad = () => {
     watch(currentSong, (newSong) => {
       if (!newSong.id || !newSong.url) {
         return;
       }
       console.log("currentSong: ", currentSong.value);
+      clearInterval(progressTimer);
       Howler.unload();
       audio = new Howl({
         src: [
+          // 根据歌曲的不同类型,传入不同的url
           decodeURIComponent(
             `http://localhost:6789/audio?audio_path=${newSong.url}`
           ),
         ],
         html5: true,
+        volume: 0.5,
+        onplay: () => {
+          console.log("播放------开始");
+          store.commit("setDuration", audio.duration());
+          progressTimer = setInterval(() => {
+            store.commit("setProgress", audio.seek().toFixed(0));
+          }, 1000);
+        },
+        onload: () => {
+          console.log("播放------加载完毕");
+        },
         onend: () => {
-          console.log("播放完毕");
+          console.log("播放------结束");
+          store.commit("setProgress", audio.duration());
+          clearInterval(progressTimer);
         },
       });
-      setTimeout(() => {
-        audio && audio.play();
-      });
-      setInterval(() => {
-        progress.value = (audio.seek() / audio.duration()) * 100;
-      }, 1000);
-      volume.value = audio.volume();
+      audio && audio.play();
+      store.commit("setProgress", 0);
+      handleVolumeChange(audio.volume() * 100);
     });
   };
 
@@ -102,7 +120,7 @@ export default function usePlayer() {
    * @param {Number} p
    */
   const handleProgressChange = (p) => {
-    audio.seek((p / 100) * audio.duration());
+    audio && audio.seek(((p / 100) * audio.duration()).toFixed(0));
   };
 
   /**
@@ -110,12 +128,13 @@ export default function usePlayer() {
    * @param {Number} v
    */
   const handleVolumeChange = (v) => {
-    Howler.volume(v / 100);
+    store.commit("setVolume", v);
   };
 
   return {
     playing,
     progress,
+    duration,
     volume,
     handleLoad,
     handlePlay,

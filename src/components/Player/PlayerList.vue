@@ -7,7 +7,6 @@
       :visible="visible"
       :mask="false"
     >
-      <a-button type="primary" @click="getList">获取播放列表</a-button>
     </a-drawer>
     <i class="icon-bofangduilie" @click="() => (visible = !visible)"></i>
   </div>
@@ -30,16 +29,9 @@ export default defineComponent({
     const currentSong = computed(() => store.getters.currentSong);
 
     // methods
-    const getList = () => {
-      // console.log("getList: ", sequenceList.value);
-      // console.log("getList: ", playList.value);
-      // console.log("currentIndex: ", currentIndex.value);
-      console.log("currentSong: ", currentSong.value);
-    };
 
     return {
       visible,
-      getList,
       sequenceList,
     };
   },

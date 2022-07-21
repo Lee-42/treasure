@@ -28,11 +28,8 @@ export default defineComponent({
     // methods
     const pre = () => emit("prev");
     const next = () => emit("next");
-    const togglePlayStatus = () => {
-      console.log("播放/暂停");
-      console.log("playingState: ", playingState.value);
+    const togglePlayStatus = () =>
       playingState.value.state ? emit("pause") : emit("play");
-    };
     return {
       playingState,
       pre,

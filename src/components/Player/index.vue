@@ -2,7 +2,7 @@
   <div class="player">
     <div class="player-progress-wrapper">
       <PlayerProgress
-        :progress="progress"
+        :progress="sliderProgress"
         @progressChange="handleProgressChange"
       />
     </div>
@@ -34,7 +34,7 @@ import PlayerOpra from "./PlayerOpra.vue";
 import PlayerMode from "./PlayerMode.vue";
 import PlayerList from "./PlayerList.vue";
 import PlayerVolume from "./PlayerVolume";
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import usePlayer from "./usePlayer.js";
 
 export default defineComponent({
@@ -51,6 +51,7 @@ export default defineComponent({
     let {
       playing,
       progress,
+      duration,
       volume,
       handleLoad,
       handlePlay,
@@ -61,9 +62,17 @@ export default defineComponent({
       handleVolumeChange,
     } = usePlayer();
     handleLoad();
+
+    let sliderProgress = computed(() => {
+      return (progress.value / duration.value).toFixed(0);
+    });
+    setInterval(() => {
+      console.log("sliderProgress: ", sliderProgress.value);
+    }, 1000);
+
     return {
       playing,
-      progress,
+      sliderProgress,
       volume,
       handleLoad,
       handlePlay,

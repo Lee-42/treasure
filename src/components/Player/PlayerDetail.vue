@@ -29,7 +29,12 @@
             - {{ currentSong.artist }}</span
           >
         </div>
-        <span class="duration">00:00/00:00</span>
+        <!-- <span class="duration"
+          >{{ parseProgressDuration((progress / 100) * duration) }}/{{
+            parseProgressDuration(duration)
+          }}</span
+        > -->
+        <span class="duration">{{ progress }}/{{ duration }}</span>
       </div>
     </div>
   </div>
@@ -38,6 +43,8 @@
 <script>
 import { defineComponent, computed } from "vue";
 import { useStore } from "vuex";
+import { parseProgressDuration } from "../../utils/index";
+import usePlayer from "./usePlayer";
 
 export default defineComponent({
   name: "play-detail",
@@ -48,13 +55,15 @@ export default defineComponent({
     const currentSong = computed(() => store.getters.currentSong);
     const toggleFullScreen = () => {
       store.commit("setFullScreen", !fullScreen.value);
-      console.log("currentSong: ", currentSong.value);
     };
-    const goSingerDetail = (singer) => {
-      console.log("goSingerDetail: ", singer);
-    };
+    const goSingerDetail = (singer) => {};
+
+    const { progress, duration } = usePlayer();
     return {
+      progress,
+      duration,
       fullScreen,
+      parseProgressDuration,
       toggleFullScreen,
       currentSong,
       goSingerDetail,

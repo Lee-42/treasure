@@ -4,19 +4,20 @@
     @mouseenter="() => (showVolume = true)"
     @mouseleave="hide"
   >
-    <div class="slider-wrapper" v-if="showVolume">
+    <div class="slider-wrapper" v-show="showVolume">
       <vue-slider
         class="volume-slider"
         v-model="vol"
         direction="btt"
+        tooltip="none"
         @drag-start="handleDragStart"
         @drag-end="handleDragEnd"
         @change="handleChange"
       ></vue-slider>
     </div>
     <div class="volume-icon" @click="muteOrDefault">
-      <i v-if="volume === 0" class="icon-mute-full"></i>
-      <i v-else-if="0 < volume && volume < 70" class="icon-soound-min-full"></i>
+      <i v-if="vol === 0" class="icon-mute-full"></i>
+      <i v-else-if="0 < vol && vol < 70" class="icon-soound-min-full"></i>
       <i v-else class="icon-sound-max-full"></i>
     </div>
   </div>
@@ -25,12 +26,17 @@
 <script>
 import { computed, ref } from "vue";
 import VueSlider from "vue-slider-component";
-
 import "vue-slider-component/theme/default.css";
 
 export default {
   components: {
     VueSlider,
+  },
+  props: {
+    volume: {
+      type: Number,
+      default: 0,
+    },
   },
   emits: ["volumeChange"],
   setup(props, { emit }) {
@@ -39,14 +45,12 @@ export default {
     let dragging = false;
     const showVolume = ref(false);
 
-    const handleDragStart = () => {
-      dragging = true;
-    };
-    const handleChange = (e) => {
+    const handleDragStart = () => (dragging = true);
+    const handleChange = (v) => {
       if (dragging) {
-        newVol = e;
+        newVol = v;
       } else {
-        emit("volumeChange", e);
+        emit("volumeChange", v);
       }
     };
     const handleDragEnd = () => {
@@ -59,7 +63,6 @@ export default {
         showVolume.value = false;
       }
     };
-
     const muteOrDefault = () => {
       if (newVol == 0) {
         newVol = 50;

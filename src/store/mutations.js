@@ -2,6 +2,15 @@ const mutations = {
   setPlayingState(state, playing) {
     state.playing = playing;
   },
+  setVolume(state, volume) {
+    state.volume = volume;
+  },
+  setProgress(state, progress) {
+    state.progress = progress;
+  },
+  setDuration(state, duration) {
+    state.duration = duration;
+  },
   setSequenceList(state, list) {
     state.sequenceList = list;
   },
