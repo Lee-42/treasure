@@ -1,36 +1,28 @@
 <template>
   <div class="play-mode">
-    <i :class="playModeIcon" @click="changePlayMode"></i>
+    <i :class="playModeIcon" @click="handleModeChange"></i>
   </div>
 </template>
 
 <script>
 import { computed } from "vue";
-import { useStore } from "vuex";
 import { PLAY_MODE } from "@/assets/js/constant.js";
+import usePlayer from "./usePlayer";
 
 export default {
   setup() {
-    //vuex
-    const store = useStore();
-    // computed
-    const playMode = computed(() => store.state.playMode);
-    const playModeIcon = computed(() => {
-      const playModeVal = playMode.value;
+    let { playMode, handleModeChange } = usePlayer();
+    let playModeIcon = computed(() => {
+      let playModeVal = playMode.value;
       return playModeVal === PLAY_MODE.sequence
         ? "icon-liebiaoxunhuan"
         : playModeVal === PLAY_MODE.loop
         ? "icon-danquxunhuan"
         : "icon-suijibofang";
     });
-    // methods
-    const changePlayMode = () => {
-      const mode = (playMode.value + 1) % 3;
-      store.dispatch("changeMode", mode);
-    };
     return {
       playModeIcon,
-      changePlayMode,
+      handleModeChange,
     };
   },
 };

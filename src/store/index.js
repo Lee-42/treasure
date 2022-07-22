@@ -12,5 +12,5 @@ export default createStore({
   mutations,
   actions,
   strict: debug,
-  plugins: debug ? [createLogger()] : [],
+  // plugins: debug ? [createLogger()] : [],
 });

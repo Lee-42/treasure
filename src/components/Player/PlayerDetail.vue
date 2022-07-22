@@ -29,12 +29,7 @@
             - {{ currentSong.artist }}</span
           >
         </div>
-        <!-- <span class="duration"
-          >{{ parseProgressDuration((progress / 100) * duration) }}/{{
-            parseProgressDuration(duration)
-          }}</span
-        > -->
-        <span class="duration">{{ progress }}/{{ duration }}</span>
+        <span class="duration">{{ progress.value }}/{{ duration }}</span>
       </div>
     </div>
   </div>
@@ -49,16 +44,17 @@ import usePlayer from "./usePlayer";
 export default defineComponent({
   name: "play-detail",
   setup() {
-    // vuex
+    /********** data *********/
+    const { progress, duration } = usePlayer();
     const store = useStore();
     const fullScreen = computed(() => store.state.fullScreen);
     const currentSong = computed(() => store.getters.currentSong);
+    /********** methods *********/
     const toggleFullScreen = () => {
       store.commit("setFullScreen", !fullScreen.value);
     };
     const goSingerDetail = (singer) => {};
 
-    const { progress, duration } = usePlayer();
     return {
       progress,
       duration,

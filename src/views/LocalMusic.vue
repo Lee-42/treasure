@@ -11,9 +11,11 @@
         (_record, index) => (index % 2 === 1 ? 'odd-line' : null)
       "
     >
-      <template #bodyCell="{ column, text }">
-        <template v-if="column.dataIndex === 'name'">
-          <a>{{ text }}</a>
+      <template #bodyCell="{ column, record, text }">
+        <template v-if="column.dataIndex === 'num'">
+          <span>{{
+            record.id == currentSong.id ? text + "播放中" : text
+          }}</span>
         </template>
       </template>
       <template #title>
@@ -40,7 +42,7 @@
           <div class="add-local-music" @click="togglePlay">
             {{ playing ? "暂停" : "播放" }}
           </div>
-          音量 {{ volume }} 进度 {{ progress }}
+          音量 {{ volume }} 进度 {{ progress.value }}
         </div>
       </template>
     </a-table>
@@ -59,6 +61,7 @@ import { db } from "../db/index.js";
 import { useStore } from "vuex";
 
 import usePlayer from "../components/Player/usePlayer.js";
+import { watch } from "original-fs";
 
 const music_columns = [
   {
@@ -101,6 +104,7 @@ export default defineComponent({
   },
   setup() {
     // data
+    let { currentSong } = usePlayer();
     let data = ref([]);
     let columns = ref(music_columns);
     let defaultLocalMusicPath = ref("暂无本地音乐目录");
@@ -125,8 +129,12 @@ export default defineComponent({
      * 加载本地音乐
      */
     const loadLocalMosic = () => {
+      let num = 1;
       db.local_music.each((song) => {
-        data.value.push(song);
+        data.value.push({
+          ...song,
+          num: num++,
+        });
       });
     };
 
@@ -214,6 +222,7 @@ export default defineComponent({
       volume,
       progress,
       data,
+      currentSong,
       defaultLocalMusicPath,
       localMusicPath,
       columns,

@@ -1,9 +1,11 @@
 <template>
-  <div class="player-progress" v-show="pgs > 0 && pgs < 100">
+  <div
+    class="player-progress"
+    v-show="sliderProgress > 0 && sliderProgress < 100"
+  >
     <vue-slider
       tooltip="none"
-      v-model="pgs"
-      :lazy="true"
+      v-model="sliderProgress"
       @drag-start="progressDragStart"
       @drag-end="progressDragEnd"
       @change="progressChange"
@@ -15,43 +17,39 @@
 import { defineComponent, computed } from "vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
+import usePlayer from "./usePlayer";
 
 export default defineComponent({
   components: {
     VueSlider,
   },
-  props: {
-    progress: {
-      type: Number,
-      default: 0,
-    },
-  },
-  emits: ["progressChange"],
-  setup(props, { emit }) {
-    // data
+  setup() {
+    /********** data *********/
+    let { progress, duration, handleProgressChange } = usePlayer();
+    let newProgress = 0;
     let dragging = false;
-    let newPgs = 0;
-    // watch
-    let pgs = computed(() => props.progress);
-    // methods
+    let sliderProgress = computed(
+      () => (progress.value.value / duration.value) * 100
+    );
+    /********** methods *********/
     const progressDragStart = () => (dragging = true);
     const progressDragEnd = (p) => {
       dragging = false;
-      emit("progressChange", newPgs);
+      handleProgressChange((newProgress / 100) * duration.value);
     };
     const progressChange = (p) => {
       if (dragging) {
-        newPgs = p;
+        newProgress = p;
       } else {
-        emit("progressChange", p);
+        handleProgressChange((p / 100) * duration.value);
       }
     };
-
     return {
-      pgs,
+      sliderProgress,
       progressDragStart,
       progressDragEnd,
       progressChange,
+      handleProgressChange,
     };
   },
 });

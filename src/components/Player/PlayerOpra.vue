@@ -1,40 +1,33 @@
 <template>
   <div class="player-opra">
-    <i class="icon-iov-pre" @click="pre"></i>
-    <i :class="playingState.icon" @click="togglePlayStatus"></i>
-    <i class="icon-iov-next" @click="next"></i>
+    <i class="icon-iov-pre" @click="handlePrev"></i>
+    <i :class="playingIcon" @click="togglePlayState"></i>
+    <i class="icon-iov-next" @click="handleNext"></i>
   </div>
 </template>
 
 <script>
 import { defineComponent, computed } from "vue";
+import usePlayer from "./usePlayer";
 export default defineComponent({
   name: "player-opra",
-  props: {
-    playing: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: ["prev", "next", "play", "pause"],
-  setup(props, { emit }) {
-    // data
-    let playingState = computed(() => {
-      return {
-        state: props.playing,
-        icon: props.playing ? "icon-pause-fill" : "icon-play-fill",
-      };
-    });
-    // methods
-    const pre = () => emit("prev");
-    const next = () => emit("next");
-    const togglePlayStatus = () =>
-      playingState.value.state ? emit("pause") : emit("play");
+  setup() {
+    /********** data *********/
+    let { playing, handlePlay, handlePause, handlePrev, handleNext } =
+      usePlayer();
+    let playingIcon = computed(() =>
+      playing.value ? "icon-pause-fill" : "icon-play-fill"
+    );
+    let togglePlayState = computed(() =>
+      playing.value ? handlePause : handlePlay
+    );
     return {
-      playingState,
-      pre,
-      next,
-      togglePlayStatus,
+      playingIcon,
+      togglePlayState,
+      handlePlay,
+      handlePause,
+      handlePrev,
+      handleNext,
     };
   },
 });

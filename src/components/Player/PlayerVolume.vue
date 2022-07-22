@@ -7,7 +7,7 @@
     <div class="slider-wrapper" v-show="showVolume">
       <vue-slider
         class="volume-slider"
-        v-model="vol"
+        v-model="volume"
         direction="btt"
         tooltip="none"
         @drag-start="handleDragStart"
@@ -16,50 +16,44 @@
       ></vue-slider>
     </div>
     <div class="volume-icon" @click="muteOrDefault">
-      <i v-if="vol === 0" class="icon-mute-full"></i>
-      <i v-else-if="0 < vol && vol < 70" class="icon-soound-min-full"></i>
+      <i v-if="volume === 0" class="icon-mute-full"></i>
+      <i v-else-if="0 < volume && volume < 70" class="icon-soound-min-full"></i>
       <i v-else class="icon-sound-max-full"></i>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
+import usePlayer from "./usePlayer";
 
 export default {
   components: {
     VueSlider,
   },
-  props: {
-    volume: {
-      type: Number,
-      default: 0,
-    },
-  },
-  emits: ["volumeChange"],
-  setup(props, { emit }) {
-    let vol = computed(() => props.volume);
+  setup() {
+    /********** data *********/
+    let { volume, handleVolumeChange } = usePlayer();
     let newVol = 0;
     let dragging = false;
     const showVolume = ref(false);
-
+    /********** methods *********/
     const handleDragStart = () => (dragging = true);
     const handleChange = (v) => {
       if (dragging) {
         newVol = v;
       } else {
-        emit("volumeChange", v);
+        handleVolumeChange(v);
       }
     };
     const handleDragEnd = () => {
       dragging = false;
-      emit("volumeChange", newVol);
+      handleVolumeChange(newVol);
     };
-
     const hide = () => {
-      if (dragging) {
+      if (!dragging) {
         showVolume.value = false;
       }
     };
@@ -69,10 +63,10 @@ export default {
       } else {
         newVol = 0;
       }
-      emit("volumeChange", newVol);
+      handleVolumeChange(newVol);
     };
     return {
-      vol,
+      volume,
       showVolume,
       handleDragStart,
       handleChange,

@@ -1,28 +1,19 @@
 <template>
   <div class="player">
     <div class="player-progress-wrapper">
-      <PlayerProgress
-        :progress="sliderProgress"
-        @progressChange="handleProgressChange"
-      />
+      <PlayerProgress />
     </div>
     <div class="player-detail-wrapper">
       <PlayDetail />
     </div>
     <div class="player-opra-wrapper">
-      <PlayerOpra
-        :playing="playing"
-        @play="handlePlay"
-        @pause="handlePause"
-        @prev="handlePrev"
-        @next="handleNext"
-      />
+      <PlayerOpra />
     </div>
     <div class="player-tool-wrapper">
       <PlayerMode />
       <PlayerList />
       <span>词</span>
-      <PlayerVolume :volume="volume" @volumeChange="handleVolumeChange" />
+      <PlayerVolume />
     </div>
   </div>
 </template>
@@ -58,28 +49,18 @@ export default defineComponent({
       handlePause,
       handlePrev,
       handleNext,
-      handleProgressChange,
       handleVolumeChange,
     } = usePlayer();
     handleLoad();
 
-    let sliderProgress = computed(() => {
-      return (progress.value / duration.value).toFixed(0);
-    });
-    setInterval(() => {
-      console.log("sliderProgress: ", sliderProgress.value);
-    }, 1000);
-
     return {
       playing,
-      sliderProgress,
       volume,
       handleLoad,
       handlePlay,
       handlePause,
       handlePrev,
       handleNext,
-      handleProgressChange,
       handleVolumeChange,
     };
   },
