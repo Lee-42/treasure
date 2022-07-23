@@ -13,9 +13,8 @@
     >
       <template #bodyCell="{ column, record, text }">
         <template v-if="column.dataIndex === 'num'">
-          <span>{{
-            record.id == currentSong.id ? text + "播放中" : text
-          }}</span>
+          <i v-if="record.id == currentSong.id" class="icon-sound-max-full"></i>
+          <span v-else>{{ text }}</span>
         </template>
       </template>
       <template #title>
@@ -61,17 +60,17 @@ import { db } from "../db/index.js";
 import { useStore } from "vuex";
 
 import usePlayer from "../components/Player/usePlayer.js";
-import { watch } from "original-fs";
 
 const music_columns = [
   {
-    title: "序号",
+    title: "", // 序号
     dataIndex: "num",
     ellipsis: true,
-    width: 80,
-    sorter: {
-      compare: (a, b) => a.num - b.num,
-    },
+    width: 60,
+    align: "center",
+    // sorter: {
+    //   compare: (a, b) => a.num - b.num,
+    // },
   },
   {
     title: "歌名",
@@ -353,6 +352,9 @@ export default defineComponent({
               font-size: 13px;
               border-bottom: none;
               background: @layout-body-bg;
+              i {
+                color: @primary-color;
+              }
             }
           }
           tr:hover {

@@ -5,6 +5,7 @@ module.exports = {
       nodeIntegration: true,
       // List native deps here if they don't work
       externals: ["chokidar"],
+      mainProcessFile: path.resolve(__dirname, "./src/main/background.js"),
     },
     "style-resources-loader": {
       preProcessor: "less",

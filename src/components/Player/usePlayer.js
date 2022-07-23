@@ -1,11 +1,11 @@
 import { ref, watch, computed } from "vue";
 import { useStore } from "vuex";
 import { Howl, Howler } from "howler";
+import { PLAY_MODE } from "../../assets/js/constant";
 
 export default function usePlayer() {
   /*************** data **************/
-  let audio;
-  let progressTimer;
+  let _howler;
   /*************** vuex **************/
   const store = useStore();
   const currentSong = computed(() => store.getters.currentSong);
@@ -24,9 +24,9 @@ export default function usePlayer() {
   const handleLoad = () => {
     watch(playing, (isPlaying) => {
       if (isPlaying) {
-        audio && audio.play();
+        _howler && _howler.play();
       } else {
-        audio && audio.pause();
+        _howler && _howler.pause();
       }
     });
     watch(volume, (v) => {
@@ -34,7 +34,7 @@ export default function usePlayer() {
     });
     watch(progress, (p) => {
       if (p && p.updated) {
-        audio && audio.seek(p.value);
+        _howler && _howler.seek(p.value);
       }
     });
     watch(playMode, (m) => {
@@ -45,46 +45,55 @@ export default function usePlayer() {
       if (!newSong.id || !newSong.url) {
         return;
       }
-      // console.log("currentSong: ", currentSong.value);
-      clearInterval(progressTimer);
-      Howler.unload();
-      audio = new Howl({
+      createAudio({
         src: [
-          // 根据歌曲的不同类型,传入不同的url
           decodeURIComponent(
             `http://localhost:6789/audio?audio_path=${newSong.url}`
           ),
         ],
-        html5: true,
-        volume: 0.5,
-        onplay: () => {
-          console.log("播放------开始");
-          store.commit("setDuration", audio.duration());
-          progressTimer = setInterval(() => {
-            store.commit("setProgress", {
-              value: audio.seek().toFixed(0),
-              updated: false,
-            });
-          }, 1000);
-        },
-        onload: () => {
-          console.log("播放------加载完毕");
-        },
-        onend: () => {
-          console.log("播放------结束");
-          console.log("播放下一首");
-          handleNext();
-          store.commit("setProgress", {
-            value: audio.duration(),
-            updated: true,
-          });
-          clearInterval(progressTimer);
-        },
       });
-      audio && audio.play();
-      store.commit("setProgress", 0);
-      handleVolumeChange(audio.volume() * 100);
     });
+  };
+
+  const createAudio = (options) => {
+    let progressTimer;
+    clearInterval(progressTimer);
+    Howler.unload();
+    _howler = new Howl({
+      html5: true,
+      volume: 0.5,
+      ...options,
+    });
+    _howler.on("play", () => {
+      console.log("播放------开始");
+      store.commit("setDuration", _howler.duration());
+      progressTimer = setInterval(() => {
+        store.commit("setProgress", {
+          value: _howler.seek().toFixed(0),
+          updated: false,
+        });
+      }, 1000);
+    });
+    _howler.on("load", () => {
+      console.log("播放------加载完毕");
+    });
+    _howler.on("end", () => {
+      console.log("播放------结束");
+      console.log("播放下一首");
+      if (playMode.value === PLAY_MODE.loop) {
+        handleLoop();
+      } else {
+        handleNext();
+      }
+      store.commit("setProgress", {
+        value: _howler.duration(),
+        updated: true,
+      });
+      clearInterval(progressTimer);
+    });
+    _howler && _howler.play();
+    store.commit("setProgress", 0);
+    handleVolumeChange(_howler.volume() * 100);
   };
 
   /**
@@ -104,7 +113,7 @@ export default function usePlayer() {
       return;
     }
     if (list.length === 1) {
-      // loop()
+      handleLoop();
     } else {
       let index = currentIndex.value - 1;
       if (index === -1) {
@@ -123,15 +132,20 @@ export default function usePlayer() {
       return;
     }
     if (list.length === 1) {
-      // loop()
+      handleLoop();
     } else {
       let index = currentIndex.value + 1;
       if (index === list.length) {
         index = 0;
       }
-      console.log("index: ", index);
       store.commit("setCurrentIndex", index);
     }
+  };
+
+  const handleLoop = () => {
+    createAudio({
+      src: _howler._src,
+    });
   };
 
   /**

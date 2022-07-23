@@ -3,7 +3,7 @@
 import { app, protocol, BrowserWindow, ipcMain, dialog } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
-import { useTrafficLight } from "./components/TrafficLight/useTrafficLight";
+import { useTrafficLight } from "../components/TrafficLight/useTrafficLight";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -71,7 +71,8 @@ app.on("ready", async () => {
     }
   }
   createWindow();
-  require("./serve/index");
+  require("../serve/index");
+  require("./shortcut");
 });
 
 // Exit cleanly on request from parent process in development mode.

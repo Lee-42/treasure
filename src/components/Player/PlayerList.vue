@@ -3,10 +3,12 @@
     <a-drawer
       class="play-list-drawer"
       :width="420"
+      :get-container="'#treasure-body'"
       placement="right"
       :visible="visible"
       :mask="false"
     >
+      <h1 v-for="song in playList" :key="song.id">{{ song.title }}</h1>
     </a-drawer>
     <i class="icon-bofangduilie" @click="() => (visible = !visible)"></i>
   </div>
@@ -33,6 +35,7 @@ export default defineComponent({
     return {
       visible,
       sequenceList,
+      playList,
     };
   },
 });

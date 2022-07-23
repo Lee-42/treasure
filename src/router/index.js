@@ -59,22 +59,10 @@ const routes = [
       import(/* webpackChunkName: "information" */ "../views/Information.vue"),
   },
   {
-    path: "/indexdb",
-    name: "IndexDB",
-    component: () =>
-      import(/* webpackChunkName: "indexdb" */ "../views/IndexDB.vue"),
-  },
-  {
     path: "/dexie",
     name: "Dexie",
     component: () =>
       import(/* webpackChunkName: "dexie" */ "../views/Dexie.vue"),
-  },
-  {
-    path: "/audio",
-    name: "Audio",
-    component: () =>
-      import(/* webpackChunkName: "audio" */ "../views/Audio.vue"),
   },
 ];
 
