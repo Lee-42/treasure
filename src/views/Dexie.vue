@@ -18,6 +18,7 @@
       <a-button @click="querySong">Query Song</a-button>
       <a-button @click="updateSong">update Song</a-button>
       <a-button @click="delSong">Del Song</a-button>
+      <a-button @click="addJson">Add json</a-button>
       <p>{{ status }}</p>
     </fieldset>
   </div>
@@ -78,6 +79,12 @@ export default {
       } catch (err) {
         console.log("count song err: ", err);
       }
+    },
+
+    async addJson() {
+      const id = await db.config.add({
+        theme: "dark",
+      });
     },
   },
 };

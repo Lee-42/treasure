@@ -11,7 +11,7 @@
     >
     </a-drawer>
     <div class="short-info" @click="toggleFullScreen">
-      <div class="album-cover">
+      <div class="short-info-album">
         <img src="../../assets/images/album_cover.webp" alt="album" />
         <div class="expand-status-icon">
           <i
@@ -22,11 +22,11 @@
           ></i>
         </div>
       </div>
-      <div class="song-info">
+      <div class="short-info-song">
         <div>
-          <span class="title">{{ currentSong.title }}</span>
+          <span class="title">{{ currentSong.title }} </span>
           <span class="singer" @click.stop="goSingerDetail(currentSong.artist)">
-            - {{ currentSong.artist }}</span
+            &nbsp;-&nbsp;{{ currentSong.artist }}</span
           >
         </div>
         <span class="duration">{{ progress.value }}/{{ duration }}</span>
@@ -74,10 +74,13 @@ export default defineComponent({
   .player-detail-drawer {
   }
   .short-info {
+    width: 300px;
+    height: 100%;
     display: flex;
-    .album-cover {
-      height: 40px;
+
+    .short-info-album {
       width: 40px;
+      height: 40px;
       position: relative;
       img {
         width: 100%;
@@ -106,30 +109,44 @@ export default defineComponent({
         opacity: 0.4;
       }
     }
-
-    .song-info {
+    .short-info-song {
+      flex: 1;
+      height: 100%;
+      white-space: nowrap; // 强制一行
+      overflow: hidden; // 溢出隐藏
+      margin-left: 10px;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
-      margin-left: 10px;
 
-      .title {
-        color: @text-color-3;
-        font-size: 15px;
-        width: 60px;
-      }
-      .singer {
-        color: @text-color-3;
-        font-size: 13px;
-      }
-      .singer:hover {
-        color: @text-color-2;
+      div {
+        .title {
+          display: inline-block;
+          max-width: 60%;
+          overflow: hidden; // 溢出隐藏
+          white-space: nowrap; // 强制一行
+          text-overflow: ellipsis; // 文字溢出显示省略号
+          font-size: 14px;
+          color: @text-color;
+        }
+        .singer {
+          max-width: 40%;
+          display: inline-block;
+          overflow: hidden; // 溢出隐藏
+          white-space: nowrap; // 强制一行
+          text-overflow: ellipsis; // 文字溢出显示省略号
+          color: @text-color-2;
+          font-size: 14px;
+        }
       }
       .duration {
+        font-size: 12px;
         color: @text-color-3;
-        font-size: 11px;
       }
     }
   }
 }
 </style>
+
+
+

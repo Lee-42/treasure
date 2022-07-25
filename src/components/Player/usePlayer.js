@@ -2,6 +2,7 @@ import { ref, watch, computed } from "vue";
 import { useStore } from "vuex";
 import { Howl, Howler } from "howler";
 import { PLAY_MODE } from "../../assets/js/constant";
+import { updateConfig, getConfig } from "../../db/index";
 
 export default function usePlayer() {
   /*************** data **************/
@@ -31,6 +32,9 @@ export default function usePlayer() {
     });
     watch(volume, (v) => {
       Howler.volume(v / 100);
+      updateConfig({
+        volume: v,
+      });
     });
     watch(progress, (p) => {
       if (p && p.updated) {
@@ -55,13 +59,14 @@ export default function usePlayer() {
     });
   };
 
-  const createAudio = (options) => {
+  const createAudio = async (options) => {
     let progressTimer;
+    let cfg = await getConfig();
     clearInterval(progressTimer);
     Howler.unload();
     _howler = new Howl({
       html5: true,
-      volume: 0.5,
+      volume: cfg.volume / 100,
       ...options,
     });
     _howler.on("play", () => {

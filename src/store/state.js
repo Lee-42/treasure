@@ -1,5 +1,5 @@
 import { PLAY_MODE } from "@/assets/js/constant";
-
+import { getConfig } from "../db/index";
 const state = {
   sequenceList: [],
   playlist: [],

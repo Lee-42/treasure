@@ -17,18 +17,23 @@
 <script>
 import { defineComponent, ref, onMounted } from "vue";
 import { themes, setTheme } from "../../assets/less/theme";
+import { getConfig, updateConfig } from "../../db/index";
 const themesRef = JSON.parse(JSON.stringify(themes));
 
 export default defineComponent({
   setup() {
     const theme = ref("light");
-    onMounted(() => {
+    onMounted(async () => {
+      let cfg = await getConfig();
+      theme.value = cfg.theme;
       setTheme(theme.value);
     });
     const select = (theme) => {
       setTheme(theme.name).then(() => {
         theme.value = theme.name;
-        console.log("主题设置成功: ", theme.value);
+        updateConfig({
+          theme: theme.value,
+        });
       });
     };
     return {
